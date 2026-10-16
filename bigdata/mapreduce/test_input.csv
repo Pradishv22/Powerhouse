@@ -1,0 +1,6 @@
+record_id,household_id,timestamp,appliance_name,category,wattage_w,usage_hours,energy_kwh,tariff_per_kwh
+REC-01,Household_A,2026-09-01T10:00:00Z,Air conditioner,Cooling,1500,2.0,3.00,8.0
+REC-02,Household_A,2026-09-01T11:00:00Z,Ceiling fan,Lighting,75,8.0,0.60,8.0
+REC-03,Household_B,2026-09-01T10:00:00Z,Refrigerator,Kitchen,200,24.0,4.80,8.0
+REC-04,Household_B,2026-09-01T12:00:00Z,Water heater,Heating,2000,1.0,2.00,8.0
+REC-05,Household_C,2026-09-01T14:00:00Z,Television,Entertainment,100,5.0,0.50,8.0

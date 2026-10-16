@@ -1,0 +1,22 @@
+[
+  {
+    "id": "admin-seed-id",
+    "name": "System Administrator",
+    "email": "admin@powerwise.local",
+    "password_hash": "scrypt:32768:8:1$lO5bW4FAxZMpU5Jv$64aa7c89e93ee2e66e9b20eb4f59c2fe0a758968107e7cf1c1f74991bc00526db13c83fda3f76e336b569f921c6b80e0c9cfe3eddae77d812babe70f9b81727d",
+    "role": "admin",
+    "is_active": true,
+    "created_at": "2026-10-16T14:58:30.275991+00:00",
+    "updated_at": "2026-10-16T14:58:30.275991+00:00"
+  },
+  {
+    "id": "student-test-id",
+    "name": "Test Student",
+    "email": "student@college.edu",
+    "password_hash": "scrypt:32768:8:1$CEKOlBYPe8BvktXA$ed99288e73bd46a6aafeafec3992882d425fee68efd0b9351251bcf7d5ed323ea6fb381a9a5adc222af90806357ed0fd1b99f3727efa3a87f0a4d8e165bc03da",
+    "role": "user",
+    "is_active": true,
+    "created_at": "2026-10-16T12:00:00Z",
+    "updated_at": "2026-10-16T12:00:00Z"
+  }
+]
