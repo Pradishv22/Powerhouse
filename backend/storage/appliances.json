@@ -163,5 +163,82 @@
     "quantity": 1,
     "created_at": "2026-10-16T15:30:03.617375+00:00",
     "updated_at": "2026-10-16T15:30:03.617375+00:00"
+  },
+  {
+    "id": "d3c55ce0-8ccc-4fc5-b4b8-ecabc0cef7c1",
+    "owner_id": "student-test-id",
+    "name": "Study Room AC",
+    "category": "Cooling",
+    "wattage_w": 1000.0,
+    "daily_usage_hours": 5.0,
+    "quantity": 1,
+    "created_at": "2026-10-16T15:59:15.651218+00:00",
+    "updated_at": "2026-10-16T15:59:15.652213+00:00"
+  },
+  {
+    "id": "a4f00412-2f3f-4f76-8d51-a6ff5ab5b691",
+    "owner_id": "5c5a4df4-834f-4ce4-ac43-5d49943974d2",
+    "name": "Air conditioner",
+    "category": "Cooling",
+    "wattage_w": 1500,
+    "daily_usage_hours": 6,
+    "quantity": 1,
+    "created_at": "2026-10-16T16:10:23.596015+00:00",
+    "updated_at": "2026-10-16T16:10:23.596015+00:00"
+  },
+  {
+    "id": "ea0a6ceb-2335-4a92-bea6-52689384ff30",
+    "owner_id": "5c5a4df4-834f-4ce4-ac43-5d49943974d2",
+    "name": "Refrigerator",
+    "category": "Kitchen",
+    "wattage_w": 200,
+    "daily_usage_hours": 24,
+    "quantity": 1,
+    "created_at": "2026-10-16T16:10:23.600033+00:00",
+    "updated_at": "2026-10-16T16:10:23.600033+00:00"
+  },
+  {
+    "id": "65e91865-0705-4ce0-acfb-17df7fbab9d9",
+    "owner_id": "5c5a4df4-834f-4ce4-ac43-5d49943974d2",
+    "name": "Television",
+    "category": "Entertainment",
+    "wattage_w": 120,
+    "daily_usage_hours": 5,
+    "quantity": 1,
+    "created_at": "2026-10-16T16:10:23.602033+00:00",
+    "updated_at": "2026-10-16T16:10:23.602033+00:00"
+  },
+  {
+    "id": "39307d0c-9437-43c6-b0a2-4e60c5d311d3",
+    "owner_id": "5c5a4df4-834f-4ce4-ac43-5d49943974d2",
+    "name": "Washing machine",
+    "category": "Laundry",
+    "wattage_w": 500,
+    "daily_usage_hours": 1,
+    "quantity": 1,
+    "created_at": "2026-10-16T16:10:23.605502+00:00",
+    "updated_at": "2026-10-16T16:10:23.605502+00:00"
+  },
+  {
+    "id": "5b76eb0b-d8ef-46d2-9f0a-823ea2a25d0e",
+    "owner_id": "5c5a4df4-834f-4ce4-ac43-5d49943974d2",
+    "name": "Lights and fans",
+    "category": "Lighting",
+    "wattage_w": 300,
+    "daily_usage_hours": 8,
+    "quantity": 1,
+    "created_at": "2026-10-16T16:10:23.608500+00:00",
+    "updated_at": "2026-10-16T16:10:23.608500+00:00"
+  },
+  {
+    "id": "77ac2185-89bb-4549-bffe-37d3ba35f4a4",
+    "owner_id": "5c5a4df4-834f-4ce4-ac43-5d49943974d2",
+    "name": "Water heater",
+    "category": "Heating",
+    "wattage_w": 2000,
+    "daily_usage_hours": 1,
+    "quantity": 1,
+    "created_at": "2026-10-16T16:10:23.611499+00:00",
+    "updated_at": "2026-10-16T16:10:23.611499+00:00"
   }
 ]

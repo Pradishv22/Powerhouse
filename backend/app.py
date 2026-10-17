@@ -20,11 +20,14 @@ def create_app(test_config=None):
         app.config.update(test_config)
 
     # Enable CORS for frontend development
-    # In development, TanStack start/vite runs on http://localhost:3000 or http://localhost:5173
+    # Allows exact origins including port 8080 (Lovable Vite dev server), 5173, and 3000
     CORS(
         app,
         supports_credentials=True,
-        origins=["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:3000", "http://127.0.0.1:5173"],
+        origins=Config.CORS_ORIGINS,
+        methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Content-Type", "Authorization"],
+        expose_headers=["Content-Type", "Set-Cookie"],
     )
 
     # Global standard error handler
@@ -57,7 +60,14 @@ def create_app(test_config=None):
 
 
 if __name__ == "__main__":
-    app = create_app()
+    import socket
     port = int(os.getenv("PORT", 5000))
+    if os.environ.get("WERKZEUG_RUN_MAIN") != "true":
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            if s.connect_ex(("127.0.0.1", port)) == 0:
+                print(f"[PowerWise WARNING] Port {port} is already in use by another process!")
+                print(f"[PowerWise TIP] If an existing Flask instance is running, terminate it before starting a new one.")
+    app = create_app()
     print(f"[PowerWise] Starting Flask API server on port {port}...")
+    print(f"[PowerWise] Configured CORS origins: {Config.CORS_ORIGINS}")
     app.run(host="0.0.0.0", port=port, debug=True)

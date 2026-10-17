@@ -45,6 +45,13 @@ def seed_admin_user():
         }
         db.users.insert_one(admin_doc)
         print(f"[PowerWise Auth] Seeded admin user: {Config.ADMIN_EMAIL}")
+    elif not check_password_hash(admin.get("password_hash", ""), Config.ADMIN_PASSWORD):
+        hashed_password = generate_password_hash(Config.ADMIN_PASSWORD)
+        db.users.update_one(
+            {"id": admin["id"]},
+            {"$set": {"password_hash": hashed_password, "updated_at": datetime.now(timezone.utc).isoformat()}}
+        )
+        print(f"[PowerWise Auth] Synchronized admin user password for {admin.get('email')}")
 
 
 def get_current_user():

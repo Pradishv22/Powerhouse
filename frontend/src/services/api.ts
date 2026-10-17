@@ -14,7 +14,22 @@ import {
   type ClusteredHousehold,
 } from "@/data/mockData";
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
+function resolveDefaultApiBase(): string {
+  if (typeof window !== "undefined") {
+    const envUrl = import.meta.env.VITE_API_URL;
+    if (envUrl) return envUrl;
+    const host = window.location.hostname || "localhost";
+    return `http://${host}:5000/api/v1`;
+  }
+  return import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
+}
+
+let activeApiBaseUrl = resolveDefaultApiBase();
+export const API_BASE_URL = activeApiBaseUrl;
+
+export function getActiveApiBaseUrl(): string {
+  return activeApiBaseUrl;
+}
 
 export type User = {
   id: string;
@@ -94,7 +109,6 @@ export type HealthData = {
 };
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`;
   const headers = new Headers(options.headers || {});
   if (!headers.has("Content-Type") && !(options.body instanceof FormData)) {
     headers.set("Content-Type", "application/json");
@@ -105,11 +119,54 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const response = await fetch(url, {
+  const fetchOptions: RequestInit = {
     ...options,
     headers,
     credentials: "include",
-  });
+  };
+
+  const primaryUrl = `${activeApiBaseUrl}${endpoint}`;
+  let response: Response;
+
+  try {
+    response = await fetch(primaryUrl, fetchOptions);
+  } catch (primaryErr: unknown) {
+    const errorMsg = primaryErr instanceof Error ? primaryErr.message : String(primaryErr);
+    const isNetworkError =
+      errorMsg === "Failed to fetch" ||
+      errorMsg.includes("NetworkError") ||
+      errorMsg.includes("Load failed") ||
+      errorMsg.includes("network");
+
+    if (isNetworkError) {
+      // Determine alternative host (switch between localhost and 127.0.0.1 for Windows IPv6/IPv4 compatibility)
+      let altBaseUrl: string | null = null;
+      if (activeApiBaseUrl.includes("localhost")) {
+        altBaseUrl = activeApiBaseUrl.replace("localhost", "127.0.0.1");
+      } else if (activeApiBaseUrl.includes("127.0.0.1")) {
+        altBaseUrl = activeApiBaseUrl.replace("127.0.0.1", "localhost");
+      }
+
+      if (altBaseUrl) {
+        try {
+          const fallbackUrl = `${altBaseUrl}${endpoint}`;
+          response = await fetch(fallbackUrl, fetchOptions);
+          // If fallback succeeds, use it for subsequent requests
+          activeApiBaseUrl = altBaseUrl;
+        } catch {
+          throw new Error(
+            `Unable to reach PowerWise API at ${activeApiBaseUrl}. Ensure the Flask backend is running on port 5000.`,
+          );
+        }
+      } else {
+        throw new Error(
+          `Unable to reach PowerWise API at ${activeApiBaseUrl}. Ensure the Flask backend is running on port 5000.`,
+        );
+      }
+    } else {
+      throw new Error(errorMsg);
+    }
+  }
 
   if (!response.ok) {
     let errMessage = `HTTP ${response.status}`;

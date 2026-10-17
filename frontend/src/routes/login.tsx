@@ -26,6 +26,7 @@ function LoginPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     if (!email.trim() || !password) {
       setError("Please enter both email and password.");
       return;
@@ -47,6 +48,7 @@ function LoginPage() {
   };
 
   const fillCredentials = (userEmail: string, userPass: string) => {
+    if (loading) return;
     setEmail(userEmail);
     setPassword(userPass);
     setError("");
@@ -87,7 +89,8 @@ function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full rounded-xl border border-input bg-background py-2.5 pl-10 pr-3.5 text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  disabled={loading}
+                  className="w-full rounded-xl border border-input bg-background py-2.5 pl-10 pr-3.5 text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-50"
                   required
                 />
               </div>
@@ -106,7 +109,8 @@ function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-xl border border-input bg-background py-2.5 pl-10 pr-3.5 text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  disabled={loading}
+                  className="w-full rounded-xl border border-input bg-background py-2.5 pl-10 pr-3.5 text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-50"
                   required
                 />
               </div>
@@ -134,15 +138,17 @@ function LoginPage() {
             <div className="mt-2.5 flex flex-wrap gap-2">
               <button
                 type="button"
+                disabled={loading}
                 onClick={() => fillCredentials("student@college.edu", "Password123!")}
-                className="rounded-lg bg-sidebar-accent px-2.5 py-1 text-[11px] font-medium text-sidebar-foreground transition hover:bg-sidebar-accent/80"
+                className="rounded-lg bg-sidebar-accent px-2.5 py-1 text-[11px] font-medium text-sidebar-foreground transition hover:bg-sidebar-accent/80 disabled:opacity-50"
               >
                 Regular User (Student)
               </button>
               <button
                 type="button"
+                disabled={loading}
                 onClick={() => fillCredentials("admin@powerwise.local", "Admin@PowerWise2026")}
-                className="rounded-lg bg-sidebar-accent px-2.5 py-1 text-[11px] font-medium text-sidebar-foreground transition hover:bg-sidebar-accent/80"
+                className="rounded-lg bg-sidebar-accent px-2.5 py-1 text-[11px] font-medium text-sidebar-foreground transition hover:bg-sidebar-accent/80 disabled:opacity-50"
               >
                 Admin User
               </button>
