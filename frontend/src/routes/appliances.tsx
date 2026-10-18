@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Plus, Trash2, RotateCcw, RefreshCw } from "lucide-react";
+import { Plus, Trash2, Pencil, RefreshCw } from "lucide-react";
 import { defaultAppliances, type Appliance } from "@/data/mockData";
 import {
   dailyEnergyKwh,
@@ -11,7 +11,7 @@ import {
   formatRupees,
 } from "@/utils/energyCalculations";
 import { PageHeader, Card } from "@/components/ui-kit";
-import { getAppliances, createAppliance, deleteAppliance } from "@/services/api";
+import { getAppliances, createAppliance, updateAppliance, deleteAppliance } from "@/services/api";
 
 export const Route = createFileRoute("/appliances")({
   head: () => ({
@@ -83,18 +83,9 @@ function Appliances() {
         hours,
       });
       await fetchAppliances();
-    } catch {
-      // Local fallback
-      setAppliances([
-        ...appliances,
-        {
-          id: crypto.randomUUID(),
-          name: form.name.trim(),
-          category: form.category.trim() || "Other",
-          watts,
-          hours,
-        },
-      ]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save the appliance.");
+      return;
     }
     setForm(emptyForm);
   }
@@ -103,8 +94,22 @@ function Appliances() {
     try {
       await deleteAppliance(id);
       await fetchAppliances();
-    } catch {
-      setAppliances(appliances.filter((a) => a.id !== id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not delete the appliance.");
+    }
+  }
+
+  async function handleEdit(appliance: Appliance) {
+    const name = window.prompt("Appliance name", appliance.name);
+    if (name === null) return;
+    const watts = window.prompt("Wattage (W)", String(appliance.watts));
+    const hours = window.prompt("Hours per day", String(appliance.hours));
+    if (!name.trim() || watts === null || hours === null) return;
+    try {
+      await updateAppliance(appliance.id, { name: name.trim(), watts: Number(watts), hours: Number(hours) });
+      await fetchAppliances();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not update the appliance.");
     }
   }
 
@@ -234,6 +239,13 @@ function Appliances() {
                           <span className="text-xs text-muted-foreground">{share.toFixed(1)}%</span>
                         </td>
                         <td>
+                          <button
+                            aria-label={`Edit ${r.name}`}
+                            onClick={() => handleEdit(r)}
+                            className="p-1 text-muted-foreground hover:text-foreground"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </button>
                           <button
                             aria-label={`Remove ${r.name}`}
                             onClick={() => handleDelete(r.id)}

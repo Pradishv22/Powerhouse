@@ -4,7 +4,6 @@ import {
   LayoutDashboard,
   LineChart,
   Plug,
-  Database,
   Boxes,
   Calculator,
   Leaf,
@@ -23,7 +22,7 @@ const BASE_NAV = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/analytics", label: "Consumption Analytics", icon: LineChart },
   { to: "/appliances", label: "Appliance Analysis", icon: Plug },
-  { to: "/big-data", label: "Big Data Processing", icon: Database },
+  { to: "/big-data", label: "Big Data Processing", icon: null },
   { to: "/clustering", label: "Consumption Clustering", icon: Boxes },
   { to: "/bill-estimator", label: "Bill Estimator", icon: Calculator },
   { to: "/recommendations", label: "Recommendations", icon: Leaf },
@@ -70,7 +69,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
                 : "text-sidebar-muted hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
             }`}
           >
-            <item.icon className={`h-4 w-4 ${active ? "text-success" : ""}`} />
+            {item.icon && <item.icon className={`h-4 w-4 ${active ? "text-success" : ""}`} />}
             {item.label}
           </Link>
         );

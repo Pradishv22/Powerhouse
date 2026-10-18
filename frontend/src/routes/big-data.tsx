@@ -15,16 +15,22 @@ import {
   Play,
   CheckCircle2,
   AlertTriangle,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { consumptionRecords, mapReduceInput } from "@/data/mockData";
 import { runMapReduce } from "@/utils/mapReduce";
 import { PageHeader, Card, PipelineDiagram } from "@/components/ui-kit";
 import {
   getHealth,
+  getDatasets,
   uploadDataset,
+  updateDataset,
+  deleteDataset,
   triggerJob,
   type HealthData,
   type AnalyticsJob,
+  type DatasetItem,
 } from "@/services/api";
 
 export const Route = createFileRoute("/big-data")({
@@ -78,6 +84,9 @@ function BigData() {
   const [jobStatus, setJobStatus] = useState<AnalyticsJob | { error: string } | null>(null);
   const [jobRunning, setJobRunning] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
+  const [datasets, setDatasets] = useState<DatasetItem[]>([]);
+
+  const refreshDatasets = () => getDatasets().then(setDatasets).catch(() => setDatasets([]));
 
   useEffect(() => {
     getHealth()
@@ -95,6 +104,10 @@ function BigData() {
       });
   }, []);
 
+  useEffect(() => {
+    refreshDatasets();
+  }, []);
+
   const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -102,8 +115,30 @@ function BigData() {
     try {
       const res = await uploadDataset(file);
       setUploadMessage(`Success: ${res.dataset.row_count} valid records loaded.`);
+      await refreshDatasets();
     } catch (err: unknown) {
       setUploadMessage(`Upload failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  };
+
+  const handleRenameDataset = async (dataset: DatasetItem) => {
+    const filename = window.prompt("Dataset filename", dataset.filename);
+    if (filename === null) return;
+    try {
+      await updateDataset(dataset.id, filename);
+      await refreshDatasets();
+    } catch (err) {
+      setUploadMessage(`Rename failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  };
+
+  const handleDeleteDataset = async (dataset: DatasetItem) => {
+    if (!window.confirm(`Delete ${dataset.filename}? This cannot be undone.`)) return;
+    try {
+      await deleteDataset(dataset.id);
+      await refreshDatasets();
+    } catch (err) {
+      setUploadMessage(`Delete failed: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 
@@ -171,6 +206,29 @@ function BigData() {
                   <span className="text-xs font-medium text-foreground">{uploadMessage}</span>
                 )}
               </div>
+            </div>
+            <div className="rounded-xl border border-border p-3.5">
+              <div className="mb-2 flex items-center justify-between">
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Saved datasets</p>
+                <button onClick={refreshDatasets} className="text-xs font-medium text-primary hover:underline">Refresh</button>
+              </div>
+              {datasets.length === 0 ? (
+                <p className="text-xs text-muted-foreground">No saved datasets available.</p>
+              ) : (
+                <ul className="space-y-2 text-xs">
+                  {datasets.map((dataset) => (
+                    <li key={dataset.id} className="flex items-center justify-between gap-2 rounded-lg bg-secondary px-2.5 py-2">
+                      <span className="min-w-0 truncate"><b>{dataset.filename}</b> · {dataset.row_count} records</span>
+                      {!dataset.is_demo && (
+                        <span className="flex shrink-0 gap-1">
+                          <button aria-label={`Rename ${dataset.filename}`} onClick={() => handleRenameDataset(dataset)} className="p-1 hover:text-primary"><Pencil className="h-3.5 w-3.5" /></button>
+                          <button aria-label={`Delete ${dataset.filename}`} onClick={() => handleDeleteDataset(dataset)} className="p-1 hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
 

@@ -168,22 +168,34 @@ def update_appliance(appliance_id):
 
     data = request.get_json(silent=True) or {}
     updates = {}
-    if "name" in data and data["name"].strip():
-        updates["name"] = data["name"].strip()
-    if "category" in data and data["category"].strip():
-        updates["category"] = data["category"].strip()
-    if "wattage_w" in data or "watts" in data:
-        val = float(data.get("wattage_w", data.get("watts", 0)))
-        if val <= 0 or val > 10000:
-            return jsonify({"error": {"code": "VALIDATION_ERROR", "message": "Wattage must be 1-10000W."}}), 400
-        updates["wattage_w"] = val
-    if "daily_usage_hours" in data or "hours" in data:
-        val = float(data.get("daily_usage_hours", data.get("hours", 0)))
-        if val <= 0 or val > 24:
-            return jsonify({"error": {"code": "VALIDATION_ERROR", "message": "Daily usage must be 0-24 hrs."}}), 400
-        updates["daily_usage_hours"] = val
-    if "quantity" in data:
-        updates["quantity"] = max(1, int(data["quantity"]))
+    try:
+        if "name" in data:
+            name = str(data["name"]).strip()
+            if not name:
+                return jsonify({"error": {"code": "VALIDATION_ERROR", "message": "Appliance name cannot be empty."}}), 400
+            updates["name"] = name
+        if "category" in data:
+            category = str(data["category"]).strip()
+            if not category:
+                return jsonify({"error": {"code": "VALIDATION_ERROR", "message": "Category cannot be empty."}}), 400
+            updates["category"] = category
+        if "wattage_w" in data or "watts" in data:
+            val = float(data.get("wattage_w", data.get("watts")))
+            if val <= 0 or val > 10000:
+                return jsonify({"error": {"code": "VALIDATION_ERROR", "message": "Wattage must be 1-10000W."}}), 400
+            updates["wattage_w"] = val
+        if "daily_usage_hours" in data or "hours" in data:
+            val = float(data.get("daily_usage_hours", data.get("hours")))
+            if val <= 0 or val > 24:
+                return jsonify({"error": {"code": "VALIDATION_ERROR", "message": "Daily usage must be 0-24 hrs."}}), 400
+            updates["daily_usage_hours"] = val
+        if "quantity" in data:
+            quantity = int(data["quantity"])
+            if quantity <= 0:
+                return jsonify({"error": {"code": "VALIDATION_ERROR", "message": "Quantity must be at least 1."}}), 400
+            updates["quantity"] = quantity
+    except (TypeError, ValueError):
+        return jsonify({"error": {"code": "VALIDATION_ERROR", "message": "Appliance values must be valid numbers."}}), 400
 
     if updates:
         db.appliances.update_one({"id": appliance_id}, {"$set": updates})

@@ -1,4 +1,5 @@
 import pytest
+from io import BytesIO
 from werkzeug.security import generate_password_hash
 from backend.app import create_app
 from backend.database import db
@@ -23,8 +24,10 @@ def ensure_test_student():
 
 @pytest.fixture
 def client():
-    # Clean temporary registration user if present
+    # Clean temporary registration users if present
     db.users.delete_one({"email": "new_student@college.edu"})
+    db.users.delete_one({"email": "alex.dev@gmail.com"})
+    db.users.delete_one({"email": "sarah.personal@outlook.com"})
     ensure_test_student()
     app = create_app({"TESTING": True, "SECRET_KEY": "test-secret-key"})
     with app.test_client() as client:
@@ -40,42 +43,96 @@ def test_health_endpoint(client):
     assert "big_data_environment" in data
 
 
-def test_auth_registration_and_login(client):
-    # Register new user
+def test_cors_lan_preflight(client):
+    """Verify that LAN IP origins like 192.168.x.x receive CORS headers."""
+    res = client.options(
+        "/api/v1/auth/login",
+        headers={
+            "Origin": "http://192.168.31.104:8080",
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "Content-Type",
+        },
+    )
+    assert res.status_code == 200
+    assert res.headers.get("Access-Control-Allow-Origin") == "http://192.168.31.104:8080"
+    assert res.headers.get("Access-Control-Allow-Credentials") == "true"
+
+
+def test_personal_email_registration_and_login(client):
+    """Verify normal personal emails (Gmail, Outlook, Yahoo) register and log in smoothly without college restriction."""
+    # Register with standard Gmail
     reg_payload = {
-        "name": "New Student",
-        "email": "new_student@college.edu",
-        "password": "Password123!",
-        "confirm_password": "Password123!",
+        "name": "Alex Developer",
+        "email": "alex.dev@gmail.com",
+        "password": "SecurePassword123!",
+        "confirm_password": "SecurePassword123!",
     }
     res = client.post("/api/v1/auth/register", json=reg_payload)
     assert res.status_code == 201
     data = res.get_json()
-    assert data["user"]["email"] == "new_student@college.edu"
-    assert "password" not in data["user"]
+    assert data["user"]["email"] == "alex.dev@gmail.com"
     assert "password_hash" not in data["user"]
+    assert "token" in data
 
     # Prevent duplicate registration
     res_dup = client.post("/api/v1/auth/register", json=reg_payload)
     assert res_dup.status_code == 409
 
-    # Login
+    # Login with personal email
     login_res = client.post(
         "/api/v1/auth/login",
-        json={"email": "new_student@college.edu", "password": "Password123!"},
+        json={"email": "alex.dev@gmail.com", "password": "SecurePassword123!"},
     )
     assert login_res.status_code == 200
-    assert login_res.get_json()["user"]["name"] == "New Student"
+    assert login_res.get_json()["user"]["name"] == "Alex Developer"
 
     # Verify session with /me
     me_res = client.get("/api/v1/auth/me")
     assert me_res.status_code == 200
-    assert me_res.get_json()["user"]["email"] == "new_student@college.edu"
+    assert me_res.get_json()["user"]["email"] == "alex.dev@gmail.com"
+
+    # Logout
+    logout_res = client.post("/api/v1/auth/logout")
+    assert logout_res.status_code == 200
+
+    # /me should now fail after logout
+    me_after = client.get("/api/v1/auth/me")
+    assert me_after.status_code == 401
+
+
+def test_auth_validation_failures(client):
+    """Test validation edge cases: invalid email format, short password, mismatched confirmation."""
+    # Invalid email
+    res1 = client.post(
+        "/api/v1/auth/register",
+        json={"name": "Test", "email": "not-an-email", "password": "Password123!", "confirm_password": "Password123!"},
+    )
+    assert res1.status_code == 400
+
+    # Short password
+    res2 = client.post(
+        "/api/v1/auth/register",
+        json={"name": "Test", "email": "valid@domain.com", "password": "123", "confirm_password": "123"},
+    )
+    assert res2.status_code == 400
+
+    # Mismatched passwords
+    res3 = client.post(
+        "/api/v1/auth/register",
+        json={"name": "Test", "email": "valid@domain.com", "password": "Password123!", "confirm_password": "Different!"},
+    )
+    assert res3.status_code == 400
+
+    # Invalid login password
+    res_bad_pw = client.post(
+        "/api/v1/auth/login",
+        json={"email": "student@college.edu", "password": "WrongPassword!"},
+    )
+    assert res_bad_pw.status_code == 401
 
 
 def test_rbac_admin_protection(client):
     # User cannot access admin overview
-    # First login as student
     login_res = client.post(
         "/api/v1/auth/login",
         json={"email": "student@college.edu", "password": "Password123!"},
@@ -98,7 +155,6 @@ def test_rbac_admin_protection(client):
 
 
 def test_appliance_crud_and_calculations(client):
-    # Login as student
     login_res = client.post(
         "/api/v1/auth/login",
         json={"email": "student@college.edu", "password": "Password123!"},
@@ -126,9 +182,84 @@ def test_appliance_crud_and_calculations(client):
     assert created["daily_kwh"] == 5.0
     assert created["monthly_kwh"] == 150.0
 
+    appliance_id = created["id"]
+    update_res = client.patch(
+        f"/api/v1/appliances/{appliance_id}",
+        json={"name": "Updated Study AC", "wattage_w": 1200, "daily_usage_hours": 4, "quantity": 2},
+    )
+    assert update_res.status_code == 200
+    assert update_res.get_json()["monthly_kwh"] == 288.0
+
+    # A fresh request proves the local JSON/Mongo storage update persisted.
+    persisted = client.get("/api/v1/appliances").get_json()["appliances"]
+    assert any(a["id"] == appliance_id and a["name"] == "Updated Study AC" for a in persisted)
+
+    delete_res = client.delete(f"/api/v1/appliances/{appliance_id}")
+    assert delete_res.status_code == 200
+    after_delete = client.get("/api/v1/appliances").get_json()["appliances"]
+    assert all(a["id"] != appliance_id for a in after_delete)
+
+
+def test_dataset_crud_persists_and_removes_uploaded_file(client):
+    login_res = client.post(
+        "/api/v1/auth/login",
+        json={"email": "student@college.edu", "password": "Password123!"},
+    )
+    assert login_res.status_code == 200
+
+    csv = b"household_id,timestamp,appliance_name,energy_kwh\nH-1,2026-01-01T00:00:00Z,AC,2.5\n"
+    upload_res = client.post(
+        "/api/v1/datasets",
+        data={"file": (BytesIO(csv), "usage.csv")},
+        content_type="multipart/form-data",
+    )
+    assert upload_res.status_code == 201
+    dataset = upload_res.get_json()["dataset"]
+    dataset_id = dataset["id"]
+
+    get_res = client.get(f"/api/v1/datasets/{dataset_id}")
+    assert get_res.status_code == 200
+    assert get_res.get_json()["dataset"]["row_count"] == 1
+
+    rename_res = client.patch(f"/api/v1/datasets/{dataset_id}", json={"filename": "renamed-usage.csv"})
+    assert rename_res.status_code == 200
+    assert rename_res.get_json()["dataset"]["filename"] == "renamed-usage.csv"
+
+    # Listing anew verifies the name was persisted, not only returned optimistically.
+    listed = client.get("/api/v1/datasets").get_json()["datasets"]
+    assert any(d["id"] == dataset_id and d["filename"] == "renamed-usage.csv" for d in listed)
+
+    saved_path = dataset["saved_path"]
+    assert __import__("os").path.exists(saved_path)
+    delete_res = client.delete(f"/api/v1/datasets/{dataset_id}")
+    assert delete_res.status_code == 200
+    assert client.get(f"/api/v1/datasets/{dataset_id}").status_code == 404
+    assert not __import__("os").path.exists(saved_path)
+
+
+def test_analytics_and_clustering(client):
+    login_res = client.post(
+        "/api/v1/auth/login",
+        json={"email": "student@college.edu", "password": "Password123!"},
+    )
+    assert login_res.status_code == 200
+
+    # Summary
+    summary_res = client.get("/api/v1/analytics/summary?tariff=8")
+    assert summary_res.status_code == 200
+    summary = summary_res.get_json()
+    assert "total_consumption" in summary
+    assert "avg_daily" in summary
+
+    # Clusters
+    cluster_res = client.get("/api/v1/analytics/clusters")
+    assert cluster_res.status_code == 200
+    clusters = cluster_res.get_json()
+    assert "clusters" in clusters
+    assert clusters["k"] == 3
+
 
 def test_csv_export_formula_injection_protection(client):
-    # Login as student
     login_res = client.post(
         "/api/v1/auth/login",
         json={"email": "student@college.edu", "password": "Password123!"},

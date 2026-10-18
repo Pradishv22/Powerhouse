@@ -240,5 +240,104 @@
     "quantity": 1,
     "created_at": "2026-10-16T16:10:23.611499+00:00",
     "updated_at": "2026-10-16T16:10:23.611499+00:00"
+  },
+  {
+    "id": "34abfd16-d450-484d-8033-2af9bfc60afa",
+    "owner_id": "student-test-id",
+    "name": "Study Room AC",
+    "category": "Cooling",
+    "wattage_w": 1000.0,
+    "daily_usage_hours": 5.0,
+    "quantity": 1,
+    "created_at": "2026-10-17T15:00:30.749866+00:00",
+    "updated_at": "2026-10-17T15:00:30.749866+00:00"
+  },
+  {
+    "id": "348e8159-c16d-4317-8980-0bdf37b2f5c4",
+    "owner_id": "student-test-id",
+    "name": "Study Room AC",
+    "category": "Cooling",
+    "wattage_w": 1000.0,
+    "daily_usage_hours": 5.0,
+    "quantity": 1,
+    "created_at": "2026-10-17T15:09:43.182398+00:00",
+    "updated_at": "2026-10-17T15:09:43.182398+00:00"
+  },
+  {
+    "id": "5f837d4e-613e-4cab-8401-512e237f266c",
+    "owner_id": "student-test-id",
+    "name": "Study Room AC",
+    "category": "Cooling",
+    "wattage_w": 1000.0,
+    "daily_usage_hours": 5.0,
+    "quantity": 1,
+    "created_at": "2026-10-17T15:14:08.870463+00:00",
+    "updated_at": "2026-10-17T15:14:08.870463+00:00"
+  },
+  {
+    "id": "783b7c97-b54c-4b9c-8381-7d4f1e44ae46",
+    "owner_id": "student-test-id",
+    "name": "Study Room AC",
+    "category": "Cooling",
+    "wattage_w": 1000.0,
+    "daily_usage_hours": 5.0,
+    "quantity": 1,
+    "created_at": "2026-10-17T15:19:13.258651+00:00",
+    "updated_at": "2026-10-17T15:19:13.258651+00:00"
+  },
+  {
+    "id": "2afefec8-26dd-4575-ab3f-94da977a8313",
+    "owner_id": "21649fb1-3430-4529-b594-d1feae054e6f",
+    "name": "Air conditioner",
+    "category": "Cooling",
+    "wattage_w": 1500,
+    "daily_usage_hours": 6,
+    "quantity": 1,
+    "created_at": "2026-10-18T07:20:28.336402+00:00",
+    "updated_at": "2026-10-18T07:20:28.336402+00:00"
+  },
+  {
+    "id": "db343c51-c5c8-452f-8164-7840339b3594",
+    "owner_id": "21649fb1-3430-4529-b594-d1feae054e6f",
+    "name": "Refrigerator",
+    "category": "Kitchen",
+    "wattage_w": 200,
+    "daily_usage_hours": 24,
+    "quantity": 1,
+    "created_at": "2026-10-18T07:20:28.339400+00:00",
+    "updated_at": "2026-10-18T07:20:28.339400+00:00"
+  },
+  {
+    "id": "1bc54dbb-9905-4230-93cf-52c7cf201a2c",
+    "owner_id": "21649fb1-3430-4529-b594-d1feae054e6f",
+    "name": "Washing machine",
+    "category": "Laundry",
+    "wattage_w": 500,
+    "daily_usage_hours": 1,
+    "quantity": 1,
+    "created_at": "2026-10-18T07:20:28.344401+00:00",
+    "updated_at": "2026-10-18T07:20:28.345404+00:00"
+  },
+  {
+    "id": "715973c1-50ef-4a3d-9489-e0fbdc750faf",
+    "owner_id": "21649fb1-3430-4529-b594-d1feae054e6f",
+    "name": "Lights and fans",
+    "category": "Lighting",
+    "wattage_w": 300,
+    "daily_usage_hours": 8,
+    "quantity": 1,
+    "created_at": "2026-10-18T07:20:28.347397+00:00",
+    "updated_at": "2026-10-18T07:20:28.347397+00:00"
+  },
+  {
+    "id": "b784651d-56da-4f5b-8ea4-fe90197273b1",
+    "owner_id": "21649fb1-3430-4529-b594-d1feae054e6f",
+    "name": "Water heater",
+    "category": "Heating",
+    "wattage_w": 2000,
+    "daily_usage_hours": 1,
+    "quantity": 1,
+    "created_at": "2026-10-18T07:20:28.351684+00:00",
+    "updated_at": "2026-10-18T07:20:28.351684+00:00"
   }
 ]

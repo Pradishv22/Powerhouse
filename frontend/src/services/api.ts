@@ -14,12 +14,71 @@ import {
   type ClusteredHousehold,
 } from "@/data/mockData";
 
+function safeGetStorage(key: string): string | null {
+  try {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.localStorage !== "undefined" &&
+      window.localStorage
+    ) {
+      return window.localStorage.getItem(key);
+    }
+  } catch {
+    // Ignore storage errors in test or SSR environments
+  }
+  return null;
+}
+
+function safeSetStorage(key: string, value: string): void {
+  try {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.localStorage !== "undefined" &&
+      window.localStorage
+    ) {
+      window.localStorage.setItem(key, value);
+    }
+  } catch {
+    // Ignore storage errors in test or SSR environments
+  }
+}
+
+function safeRemoveStorage(key: string): void {
+  try {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.localStorage !== "undefined" &&
+      window.localStorage
+    ) {
+      window.localStorage.removeItem(key);
+    }
+  } catch {
+    // Ignore storage errors in test or SSR environments
+  }
+}
+
 function resolveDefaultApiBase(): string {
   if (typeof window !== "undefined") {
+    // 1. Check local storage override if user configured one
+    const userOverride = safeGetStorage("powerwise_api_url");
+    if (userOverride && userOverride.trim()) {
+      return userOverride.trim().replace(/\/+$/, "");
+    }
+
+    // 2. Check build-time VITE_API_URL
     const envUrl = import.meta.env.VITE_API_URL;
-    if (envUrl) return envUrl;
-    const host = window.location.hostname || "localhost";
-    return `http://${host}:5000/api/v1`;
+    if (envUrl && envUrl.trim()) {
+      return envUrl.trim().replace(/\/+$/, "");
+    }
+
+    // 3. Same-machine development: localhost or 127.0.0.1
+    const hostname = window.location.hostname || "localhost";
+    if (hostname === "localhost" || hostname === "127.0.0.1" || !hostname) {
+      return "http://localhost:5000/api/v1";
+    }
+
+    // 4. LAN access (e.g., 192.168.x.x, 10.x.x.x, or tablet/phone accessing the PC)
+    return `http://${hostname}:5000/api/v1`;
   }
   return import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 }
@@ -29,6 +88,11 @@ export const API_BASE_URL = activeApiBaseUrl;
 
 export function getActiveApiBaseUrl(): string {
   return activeApiBaseUrl;
+}
+
+export function setActiveApiBaseUrl(newUrl: string): void {
+  activeApiBaseUrl = newUrl.replace(/\/+$/, "");
+  safeSetStorage("powerwise_api_url", activeApiBaseUrl);
 }
 
 export type User = {
@@ -114,7 +178,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     headers.set("Content-Type", "application/json");
   }
 
-  const token = localStorage.getItem("powerwise_token");
+  const token = safeGetStorage("powerwise_token");
   if (token && !headers.has("Authorization")) {
     headers.set("Authorization", `Bearer ${token}`);
   }
@@ -138,29 +202,37 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
       errorMsg.includes("Load failed") ||
       errorMsg.includes("network");
 
-    if (isNetworkError) {
-      // Determine alternative host (switch between localhost and 127.0.0.1 for Windows IPv6/IPv4 compatibility)
-      let altBaseUrl: string | null = null;
-      if (activeApiBaseUrl.includes("localhost")) {
-        altBaseUrl = activeApiBaseUrl.replace("localhost", "127.0.0.1");
-      } else if (activeApiBaseUrl.includes("127.0.0.1")) {
-        altBaseUrl = activeApiBaseUrl.replace("127.0.0.1", "localhost");
+    if (isNetworkError && typeof window !== "undefined") {
+      const candidates: string[] = [];
+      const currentHost = window.location.hostname || "localhost";
+
+      if (!activeApiBaseUrl.includes("localhost")) {
+        candidates.push("http://localhost:5000/api/v1");
+      }
+      if (!activeApiBaseUrl.includes("127.0.0.1")) {
+        candidates.push("http://127.0.0.1:5000/api/v1");
+      }
+      if (currentHost && currentHost !== "localhost" && currentHost !== "127.0.0.1") {
+        const lanUrl = `http://${currentHost}:5000/api/v1`;
+        if (activeApiBaseUrl !== lanUrl) candidates.push(lanUrl);
       }
 
-      if (altBaseUrl) {
+      let fallbackSuccess = false;
+      for (const candidateBase of candidates) {
         try {
-          const fallbackUrl = `${altBaseUrl}${endpoint}`;
+          const fallbackUrl = `${candidateBase}${endpoint}`;
           response = await fetch(fallbackUrl, fetchOptions);
-          // If fallback succeeds, use it for subsequent requests
-          activeApiBaseUrl = altBaseUrl;
+          activeApiBaseUrl = candidateBase;
+          fallbackSuccess = true;
+          break;
         } catch {
-          throw new Error(
-            `Unable to reach PowerWise API at ${activeApiBaseUrl}. Ensure the Flask backend is running on port 5000.`,
-          );
+          // continue checking other candidates
         }
-      } else {
+      }
+
+      if (!fallbackSuccess) {
         throw new Error(
-          `Unable to reach PowerWise API at ${activeApiBaseUrl}. Ensure the Flask backend is running on port 5000.`,
+          `Unable to reach PowerWise API at ${activeApiBaseUrl}. Ensure the Flask backend is running on port 5000 (e.g. 'python -m backend.app').`,
         );
       }
     } else {
@@ -197,7 +269,7 @@ export async function apiRegister(
     method: "POST",
     body: JSON.stringify({ name, email, password, confirm_password: confirmPassword }),
   });
-  if (res.token) localStorage.setItem("powerwise_token", res.token);
+  if (res.token) safeSetStorage("powerwise_token", res.token);
   return res.user;
 }
 
@@ -206,12 +278,12 @@ export async function apiLogin(email: string, password: string) {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
-  if (res.token) localStorage.setItem("powerwise_token", res.token);
+  if (res.token) safeSetStorage("powerwise_token", res.token);
   return res.user;
 }
 
 export async function apiLogout() {
-  localStorage.removeItem("powerwise_token");
+  safeRemoveStorage("powerwise_token");
   try {
     await request("/auth/logout", { method: "POST" });
   } catch {
@@ -276,6 +348,22 @@ export async function createAppliance(data: {
       category: data.category,
       wattage_w: data.watts,
       daily_usage_hours: data.hours,
+    }),
+  });
+}
+
+export async function updateAppliance(
+  id: string,
+  data: Partial<{ name: string; category: string; watts: number; hours: number; quantity: number }>,
+) {
+  return request(`/appliances/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      ...(data.name !== undefined ? { name: data.name } : {}),
+      ...(data.category !== undefined ? { category: data.category } : {}),
+      ...(data.watts !== undefined ? { wattage_w: data.watts } : {}),
+      ...(data.hours !== undefined ? { daily_usage_hours: data.hours } : {}),
+      ...(data.quantity !== undefined ? { quantity: data.quantity } : {}),
     }),
   });
 }
@@ -347,6 +435,17 @@ export async function uploadDataset(file: File) {
   });
 }
 
+export async function updateDataset(id: string, filename: string) {
+  return request<{ dataset: DatasetItem }>(`/datasets/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ filename }),
+  });
+}
+
+export async function deleteDataset(id: string) {
+  return request(`/datasets/${id}`, { method: "DELETE" });
+}
+
 export async function triggerJob(operation: string, engine: string) {
   return request<{ message: string; job: AnalyticsJob }>("/analytics/jobs", {
     method: "POST",
@@ -368,5 +467,5 @@ export async function getRecommendations() {
 }
 
 export function getExportCsvUrl(tariff = 8) {
-  return `${API_BASE_URL}/reports/export.csv?tariff=${tariff}`;
+  return `${getActiveApiBaseUrl()}/reports/export.csv?tariff=${tariff}`;
 }

@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -28,13 +29,20 @@ class Config:
     DEFAULT_CORS_ORIGINS = (
         "http://localhost:8080,http://127.0.0.1:8080,"
         "http://localhost:5173,http://127.0.0.1:5173,"
-        "http://localhost:3000,http://127.0.0.1:3000"
+        "http://localhost:3000,http://127.0.0.1:3000,"
+        "http://localhost:4173,http://127.0.0.1:4173"
     )
-    CORS_ORIGINS = [
+    EXPLICIT_CORS_ORIGINS = [
         o.strip()
         for o in os.getenv("CORS_ORIGINS", DEFAULT_CORS_ORIGINS).split(",")
         if o.strip()
     ]
+    # Regex matching localhost, 127.0.0.1, and RFC1918 private network IPs on any port
+    LAN_CORS_REGEX = re.compile(
+        r"^https?://(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[0-1])\.\d+\.\d+)(:\d+)?$"
+    )
+    # Combined origins for flask-cors (explicit origins + private LAN regex)
+    CORS_ORIGINS = EXPLICIT_CORS_ORIGINS + [LAN_CORS_REGEX]
 
     # HDFS & Spark paths / config
     HDFS_NAMENODE_URL = os.getenv("HDFS_NAMENODE_URL", "")

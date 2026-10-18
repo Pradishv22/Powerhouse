@@ -273,3 +273,47 @@ def get_dataset(dataset_id):
         return jsonify({"error": {"code": "FORBIDDEN", "message": "Access denied to this dataset."}}), 403
 
     return jsonify({"dataset": dataset})
+
+
+def _get_owned_dataset_or_error(dataset_id):
+    dataset = db.datasets.find_one({"id": dataset_id})
+    if not dataset:
+        return None, (jsonify({"error": {"code": "NOT_FOUND", "message": "Dataset not found."}}), 404)
+    if dataset.get("owner_id") != g.current_user["id"] and g.current_user.get("role") != "admin":
+        return None, (jsonify({"error": {"code": "FORBIDDEN", "message": "Cannot modify another user's dataset."}}), 403)
+    if dataset.get("is_demo", False):
+        return None, (jsonify({"error": {"code": "FORBIDDEN", "message": "The shared demo dataset cannot be changed."}}), 403)
+    return dataset, None
+
+
+@dataset_bp.route("/<dataset_id>", methods=["PATCH"])
+@login_required
+def update_dataset(dataset_id):
+    dataset, error = _get_owned_dataset_or_error(dataset_id)
+    if error:
+        return error
+    data = request.get_json(silent=True) or {}
+    if set(data) - {"filename"}:
+        return jsonify({"error": {"code": "VALIDATION_ERROR", "message": "Only the dataset filename can be changed."}}), 400
+    filename = str(data.get("filename", "")).strip()
+    if not filename or filename != os.path.basename(filename) or not filename.lower().endswith(".csv"):
+        return jsonify({"error": {"code": "VALIDATION_ERROR", "message": "Filename must be a CSV filename without a path."}}), 400
+    db.datasets.update_one({"id": dataset["id"]}, {"$set": {"filename": filename}})
+    return jsonify({"dataset": db.datasets.find_one({"id": dataset["id"]})})
+
+
+@dataset_bp.route("/<dataset_id>", methods=["DELETE"])
+@login_required
+def delete_dataset(dataset_id):
+    dataset, error = _get_owned_dataset_or_error(dataset_id)
+    if error:
+        return error
+    saved_path = Path(dataset.get("saved_path", ""))
+    upload_root = Config.UPLOAD_FOLDER.resolve()
+    try:
+        if saved_path and saved_path.resolve().is_relative_to(upload_root) and saved_path.exists():
+            saved_path.unlink()
+    except (OSError, ValueError):
+        return jsonify({"error": {"code": "STORAGE_ERROR", "message": "Dataset metadata was retained because its file could not be removed."}}), 500
+    db.datasets.delete_one({"id": dataset["id"]})
+    return jsonify({"message": "Dataset deleted successfully.", "id": dataset["id"]})

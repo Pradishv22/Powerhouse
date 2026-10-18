@@ -9,12 +9,12 @@ Session Handling: `HttpOnly`, `SameSite=Lax` signed cookies or `Authorization: B
 ## 1. Authentication Endpoints
 
 ### `POST /api/v1/auth/register`
-Creates a new standard user account.
+Creates a new standard user account. Any standard email address is supported (Gmail, Outlook, Yahoo, personal, or corporate).
 - **Request Body**:
   ```json
   {
     "name": "Alex Kumar",
-    "email": "alex@college.edu",
+    "email": "alex.dev@gmail.com",
     "password": "Password123!",
     "confirm_password": "Password123!"
   }
@@ -26,7 +26,7 @@ Creates a new standard user account.
     "user": {
       "id": "uuid-v4",
       "name": "Alex Kumar",
-      "email": "alex@college.edu",
+      "email": "alex.dev@gmail.com",
       "role": "user",
       "created_at": "2026-10-16T15:00:00Z",
       "is_active": true
@@ -40,7 +40,7 @@ Authenticates a user and establishes an HTTP session.
 - **Request Body**:
   ```json
   {
-    "email": "alex@college.edu",
+    "email": "alex.dev@gmail.com",
     "password": "Password123!"
   }
   ```
@@ -51,7 +51,7 @@ Authenticates a user and establishes an HTTP session.
     "user": {
       "id": "uuid-v4",
       "name": "Alex Kumar",
-      "email": "alex@college.edu",
+      "email": "alex.dev@gmail.com",
       "role": "user"
     },
     "token": "uuid-v4"

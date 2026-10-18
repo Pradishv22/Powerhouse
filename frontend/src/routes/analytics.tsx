@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   AreaChart,
@@ -24,6 +24,7 @@ import {
   Segmented,
   tooltipStyle,
 } from "@/components/ui-kit";
+import { getConsumptionSeries, type ConsumptionData } from "@/services/api";
 
 export const Route = createFileRoute("/analytics")({
   head: () => ({
@@ -52,16 +53,29 @@ const keyFor: Record<Period, (d: string) => string> = {
 
 function Analytics() {
   const [period, setPeriod] = useState<Period>("weekly");
+  const [apiData, setApiData] = useState<ConsumptionData | null>(null);
 
-  // Group all records by the chosen period
-  const series = useMemo(
+  useEffect(() => {
+    getConsumptionSeries(period)
+      .then((data) => {
+        if (data && data.series && data.series.length > 0) {
+          setApiData(data);
+        }
+      })
+      .catch(() => null);
+  }, [period]);
+
+  // Group fallback records by chosen period
+  const mockFallbackSeries = useMemo(
     () =>
       sumBy(consumptionRecords, (r) => keyFor[period](r.date)).sort((a, b) =>
         a.name.localeCompare(b.name),
       ),
     [period],
   );
-  const total = totalKwh(consumptionRecords);
+
+  const series = apiData?.series?.length ? apiData.series : mockFallbackSeries;
+  const total = series.reduce((s, r) => s + r.kwh, 0);
   const avg = series.length ? total / series.length : 0;
   const highest = series.reduce(
     (a, b) => (b.kwh > a.kwh ? b : a),
@@ -75,16 +89,22 @@ function Analytics() {
   const prev = series.at(-2)?.kwh ?? 0;
   const change = percentChange(last, prev);
 
-  const byHousehold = useMemo(() => sumBy(consumptionRecords, (r) => r.household), []);
+  const byHousehold = apiData?.by_household?.length
+    ? apiData.by_household
+    : sumBy(consumptionRecords, (r) => r.household);
+
   // Household × appliance matrix for stacked bars
   const stacked = useMemo(() => {
+    if (apiData?.stacked_matrix?.length) {
+      return apiData.stacked_matrix;
+    }
     const rows: Record<string, Record<string, number | string>> = {};
     for (const r of consumptionRecords) {
       const row = (rows[r.appliance] ??= { name: r.appliance });
       row[r.household] = Math.round(((row[r.household] as number) ?? 0) + r.kwh);
     }
     return Object.values(rows);
-  }, []);
+  }, [apiData]);
 
   return (
     <>
