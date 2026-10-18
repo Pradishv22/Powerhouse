@@ -12,9 +12,9 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { Zap, Activity, ArrowUp, ArrowDown, GitCompare } from "lucide-react";
+import { Zap, Activity, ArrowUp, ArrowDown, GitCompare, Database } from "lucide-react";
 import { consumptionRecords } from "@/data/mockData";
-import { sumBy, weekKey, monthKey, totalKwh } from "@/utils/aggregate";
+import { sumBy, weekKey, monthKey } from "@/utils/aggregate";
 import { percentChange, formatKwh } from "@/utils/energyCalculations";
 import {
   PageHeader,
@@ -24,7 +24,12 @@ import {
   Segmented,
   tooltipStyle,
 } from "@/components/ui-kit";
-import { getConsumptionSeries, type ConsumptionData } from "@/services/api";
+import {
+  getConsumptionSeries,
+  getDatasets,
+  type ConsumptionData,
+  type DatasetItem,
+} from "@/services/api";
 
 export const Route = createFileRoute("/analytics")({
   head: () => ({
@@ -53,19 +58,30 @@ const keyFor: Record<Period, (d: string) => string> = {
 
 function Analytics() {
   const [period, setPeriod] = useState<Period>("weekly");
+  const [datasets, setDatasets] = useState<DatasetItem[]>([]);
+  const [selectedDatasetId, setSelectedDatasetId] = useState<string>("demo-dataset-default");
   const [apiData, setApiData] = useState<ConsumptionData | null>(null);
 
   useEffect(() => {
-    getConsumptionSeries(period)
+    getDatasets().then((dList) => {
+      setDatasets(dList);
+      if (dList.length > 0) {
+        setSelectedDatasetId((prev) => (dList.some((d) => d.id === prev) ? prev : dList[0].id));
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    getConsumptionSeries(period, selectedDatasetId)
       .then((data) => {
         if (data && data.series && data.series.length > 0) {
           setApiData(data);
         }
       })
       .catch(() => null);
-  }, [period]);
+  }, [period, selectedDatasetId]);
 
-  // Group fallback records by chosen period
+  // Group fallback records by chosen period if API returns empty
   const mockFallbackSeries = useMemo(
     () =>
       sumBy(consumptionRecords, (r) => keyFor[period](r.date)).sort((a, b) =>
@@ -110,10 +126,25 @@ function Analytics() {
     <>
       <PageHeader
         title="Consumption Analytics"
-        subtitle="Compare electricity usage across time periods, households and appliances."
+        subtitle="Compare electricity usage across time periods, households and appliances on authorized datasets."
       >
         <div className="flex flex-wrap items-center gap-3">
-          <DemoBadge />
+          {datasets.length > 0 && (
+            <div className="flex items-center gap-1.5 rounded-xl border border-input bg-card px-2.5 py-1 text-xs">
+              <Database className="h-3.5 w-3.5 text-primary" />
+              <select
+                value={selectedDatasetId}
+                onChange={(e) => setSelectedDatasetId(e.target.value)}
+                className="bg-transparent text-xs font-semibold text-foreground outline-none"
+              >
+                {datasets.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.filename} {d.is_demo ? "(Shared Demo)" : `(${d.row_count} rows)`}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <Segmented<Period>
             value={period}
             onChange={setPeriod}
@@ -127,28 +158,28 @@ function Analytics() {
       </PageHeader>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <MetricCard label="Total" value={formatKwh(total)} icon={Zap} />
+        <MetricCard label="Total Consumption" value={formatKwh(total)} icon={Zap} />
         <MetricCard
           label={`Avg per ${period.replace("ly", "").replace("dai", "day")}`}
           value={formatKwh(avg)}
           icon={Activity}
         />
         <MetricCard
-          label="Highest period"
+          label="Highest Period"
           value={formatKwh(highest.kwh)}
           hint={highest.name}
           icon={ArrowUp}
           tone="warning"
         />
         <MetricCard
-          label="Lowest period"
+          label="Lowest Period"
           value={formatKwh(lowest.kwh)}
           hint={lowest.name}
           icon={ArrowDown}
           tone="success"
         />
         <MetricCard
-          label="vs previous"
+          label="Period vs Previous"
           value={`${change > 0 ? "+" : ""}${change.toFixed(1)}%`}
           hint={`${series.at(-1)?.name} vs ${series.at(-2)?.name}`}
           icon={GitCompare}
@@ -184,7 +215,7 @@ function Analytics() {
       </ChartCard>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        <ChartCard title="Household comparison" subtitle="Total kWh over 90 days">
+        <ChartCard title="Household Comparison" subtitle="Total kWh aggregation by household">
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={byHousehold} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
@@ -201,7 +232,10 @@ function Analytics() {
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
-        <ChartCard title="Appliance × household" subtitle="Stacked kWh">
+        <ChartCard
+          title="Appliance × Household Matrix"
+          subtitle="Stacked kWh by appliance category"
+        >
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={stacked}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />

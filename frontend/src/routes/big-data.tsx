@@ -7,9 +7,6 @@ import {
   FileSpreadsheet,
   Cpu,
   BarChart3,
-  Globe,
-  LayoutDashboard,
-  Radio,
   Sparkles,
   Upload,
   Play,
@@ -17,6 +14,11 @@ import {
   AlertTriangle,
   Pencil,
   Trash2,
+  Share2,
+  ShieldAlert,
+  Clock,
+  Layers,
+  FileCheck2,
 } from "lucide-react";
 import { consumptionRecords, mapReduceInput } from "@/data/mockData";
 import { runMapReduce } from "@/utils/mapReduce";
@@ -27,25 +29,22 @@ import {
   uploadDataset,
   updateDataset,
   deleteDataset,
+  shareDataset,
   triggerJob,
   type HealthData,
   type AnalyticsJob,
   type DatasetItem,
 } from "@/services/api";
+import { useAuth } from "@/lib/authContext";
 
 export const Route = createFileRoute("/big-data")({
   head: () => ({
     meta: [
-      { title: "Big Data Processing — PowerWise" },
+      { title: "Big Data Processing & Quality Pipeline — PowerWise" },
       {
         name: "description",
         content:
-          "How HDFS, MapReduce and PySpark process electricity consumption data in PowerWise.",
-      },
-      { property: "og:title", content: "Big Data Processing — PowerWise" },
-      {
-        property: "og:description",
-        content: "HDFS storage, MapReduce aggregation and PySpark analytics explained.",
+          "HDFS distributed storage architecture, MapReduce streaming aggregation, Apache Spark, and CSV Data Quality & Trust Panel.",
       },
     ],
   }),
@@ -67,7 +66,7 @@ function Section({
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-hero font-display text-sm font-bold text-primary-foreground">
           {letter}
         </span>
-        <h2 className="text-lg font-semibold">{title}</h2>
+        <h2 className="text-lg font-semibold text-foreground">{title}</h2>
       </div>
       {children}
     </Card>
@@ -79,14 +78,28 @@ const th = "py-2 text-left text-xs uppercase text-muted-foreground";
 function BigData() {
   const { mapped, shuffled, reduced } = runMapReduce(mapReduceInput);
   const sizeKb = Math.round((consumptionRecords.length * 42) / 1024);
+  const { user, isAdmin, isAnalyst } = useAuth();
 
   const [health, setHealth] = useState<HealthData | null>(null);
   const [jobStatus, setJobStatus] = useState<AnalyticsJob | { error: string } | null>(null);
   const [jobRunning, setJobRunning] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
+  const [uploadError, setUploadError] = useState("");
   const [datasets, setDatasets] = useState<DatasetItem[]>([]);
+  const [selectedDatasetId, setSelectedDatasetId] = useState<string>("demo-dataset-default");
+  const [shareSuccess, setShareSuccess] = useState("");
 
-  const refreshDatasets = () => getDatasets().then(setDatasets).catch(() => setDatasets([]));
+  const refreshDatasets = async () => {
+    try {
+      const data = await getDatasets();
+      setDatasets(data);
+      if (data.length > 0 && !data.some((d) => d.id === selectedDatasetId)) {
+        setSelectedDatasetId(data[0].id);
+      }
+    } catch {
+      setDatasets([]);
+    }
+  };
 
   useEffect(() => {
     getHealth()
@@ -102,9 +115,7 @@ function BigData() {
           },
         });
       });
-  }, []);
 
-  useEffect(() => {
     refreshDatasets();
   }, []);
 
@@ -112,33 +123,59 @@ function BigData() {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploadMessage("Validating and uploading CSV...");
+    setUploadError("");
     try {
       const res = await uploadDataset(file);
-      setUploadMessage(`Success: ${res.dataset.row_count} valid records loaded.`);
+      setUploadMessage(
+        `Validation Passed: ${res.dataset.row_count} records accepted. Storage: Local CSV.`,
+      );
       await refreshDatasets();
+      setSelectedDatasetId(res.dataset.id);
     } catch (err: unknown) {
-      setUploadMessage(`Upload failed: ${err instanceof Error ? err.message : String(err)}`);
+      setUploadMessage("");
+      setUploadError(
+        `Upload rejected: ${err instanceof Error ? err.message : String(err)}. Active dataset was not corrupted.`,
+      );
     }
   };
 
   const handleRenameDataset = async (dataset: DatasetItem) => {
-    const filename = window.prompt("Dataset filename", dataset.filename);
+    const filename = window.prompt(
+      "Enter new dataset filename (must end in .csv):",
+      dataset.filename,
+    );
     if (filename === null) return;
     try {
       await updateDataset(dataset.id, filename);
       await refreshDatasets();
     } catch (err) {
-      setUploadMessage(`Rename failed: ${err instanceof Error ? err.message : String(err)}`);
+      setUploadError(`Rename failed: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 
   const handleDeleteDataset = async (dataset: DatasetItem) => {
-    if (!window.confirm(`Delete ${dataset.filename}? This cannot be undone.`)) return;
+    if (
+      !window.confirm(
+        `Permanently delete "${dataset.filename}"? This will remove its metadata and stored file.`,
+      )
+    )
+      return;
     try {
       await deleteDataset(dataset.id);
       await refreshDatasets();
     } catch (err) {
-      setUploadMessage(`Delete failed: ${err instanceof Error ? err.message : String(err)}`);
+      setUploadError(`Delete failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  };
+
+  const handleShareWithAnalysts = async (dataset: DatasetItem) => {
+    try {
+      await shareDataset(dataset.id, undefined, true);
+      setShareSuccess(`Dataset "${dataset.filename}" shared with all authorized analysts!`);
+      await refreshDatasets();
+      setTimeout(() => setShareSuccess(""), 4000);
+    } catch (err) {
+      setUploadError(`Share failed: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 
@@ -146,7 +183,7 @@ function BigData() {
     setJobRunning(true);
     setJobStatus(null);
     try {
-      const res = await triggerJob("aggregation", engine);
+      const res = await triggerJob("aggregation", engine, selectedDatasetId);
       setJobStatus(res.job);
     } catch (err: unknown) {
       setJobStatus({ error: err instanceof Error ? err.message : String(err) });
@@ -159,111 +196,292 @@ function BigData() {
     health?.big_data_environment?.hdfs_status || "HDFS unavailable — using local dataset storage";
   const sparkAvailable = !!health?.big_data_environment?.pyspark_available;
 
+  // Selected Dataset metadata
+  const activeDataset = datasets.find((d) => d.id === selectedDatasetId) || datasets[0];
+  const summary = activeDataset?.validation_summary;
+
   return (
     <>
       <PageHeader
-        title="Big Data Processing Pipeline"
-        subtitle="End-to-end data pipeline: CSV Ingestion → HDFS Distributed Storage → MapReduce & PySpark Processing → Flask API → Tableau/Dashboard."
+        title="Big Data Processing & Trust Pipeline"
+        subtitle="End-to-end data pipeline: CSV Ingestion → Schema Validation → HDFS/Local Storage → MapReduce & PySpark Processing → Analytics Engine."
       >
         <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-semibold">
-          Execution Status: {sparkAvailable ? "PySpark Available" : "Local Python Demo Mode"}
+          Execution Status: {sparkAvailable ? "PySpark Cluster Ready" : "Local Python Demo Mode"}
         </span>
       </PageHeader>
 
-      <Section letter="A" title="Dataset Ingestion & HDFS Distributed Storage">
+      {/* SECTION 1: DATA QUALITY & TRUST PANEL */}
+      <Section letter="A" title="Data Quality & Trust Panel (CSV Ingestion & Audit)">
         <p className="mb-4 text-sm text-muted-foreground">
-          In an enterprise environment, smart-meter CSV files are partitioned into distributed
-          blocks (default 128 MB) across DataNodes in Hadoop HDFS.
+          Every uploaded dataset undergoes strict validation against the canonical Big Data schema.
+          Invalid records and malformed timestamps are quarantined to protect analytical integrity.
         </p>
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-3">
-            <dl className="grid grid-cols-2 gap-3 text-sm">
-              {[
-                ["Active Dataset", "electricity_usage.csv"],
-                ["Records", consumptionRecords.length.toLocaleString("en-IN")],
-                ["Format", "Canonical CSV"],
-                ["Size (approx.)", `${sizeKb} KB`],
-                ["Replication Factor", "3 (configured)"],
-                ["HDFS Status", hdfsStatus],
-              ].map(([k, v]) => (
-                <div key={k} className="rounded-xl bg-secondary p-3">
-                  <dt className="text-xs text-muted-foreground">{k}</dt>
-                  <dd className="font-semibold">{v}</dd>
-                </div>
-              ))}
-            </dl>
 
-            <div className="rounded-xl border border-border p-3.5">
-              <label className="block text-xs font-semibold uppercase text-muted-foreground">
-                Upload Custom Dataset
-              </label>
-              <div className="mt-2 flex items-center gap-3">
-                <label className="flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90">
-                  <Upload className="h-3.5 w-3.5" /> Select CSV File
-                  <input type="file" accept=".csv" onChange={handleFileUpload} className="hidden" />
-                </label>
-                {uploadMessage && (
-                  <span className="text-xs font-medium text-foreground">{uploadMessage}</span>
+        <div className="grid gap-4 lg:grid-cols-12">
+          {/* Active Dataset Inspection Card */}
+          <div className="space-y-4 lg:col-span-7">
+            <div className="rounded-2xl border border-border bg-card p-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
+                <div>
+                  <span className="text-xs font-medium text-muted-foreground uppercase">
+                    Inspecting Dataset
+                  </span>
+                  <div className="mt-1 flex items-center gap-2">
+                    <select
+                      value={selectedDatasetId}
+                      onChange={(e) => setSelectedDatasetId(e.target.value)}
+                      className="rounded-xl border border-input bg-background px-3 py-1.5 text-sm font-semibold text-foreground focus:ring-2 focus:ring-ring"
+                    >
+                      {datasets.map((d) => (
+                        <option key={d.id} value={d.id}>
+                          {d.filename} {d.is_demo ? "(Shared Demo)" : `(${d.row_count} rows)`}
+                        </option>
+                      ))}
+                    </select>
+                    {activeDataset?.is_demo ? (
+                      <span className="rounded-md border border-blue-500/30 bg-blue-500/10 px-2 py-0.5 text-[10px] font-bold text-blue-400">
+                        SHARED DEMO DATASET
+                      </span>
+                    ) : (
+                      <span className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+                        USER-OWNED DATASET
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Share action for dataset owner or admin */}
+                {(isAdmin || activeDataset?.owner_id === user?.id) && !activeDataset?.is_demo && (
+                  <button
+                    onClick={() => handleShareWithAnalysts(activeDataset)}
+                    className="flex items-center gap-1.5 rounded-xl border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary/80"
+                  >
+                    <Share2 className="h-3.5 w-3.5" /> Share with Analysts
+                  </button>
                 )}
               </div>
-            </div>
-            <div className="rounded-xl border border-border p-3.5">
-              <div className="mb-2 flex items-center justify-between">
-                <p className="text-xs font-semibold uppercase text-muted-foreground">Saved datasets</p>
-                <button onClick={refreshDatasets} className="text-xs font-medium text-primary hover:underline">Refresh</button>
+
+              {shareSuccess && (
+                <div className="mt-3 flex items-center gap-1.5 text-xs font-medium text-success">
+                  <CheckCircle2 className="h-4 w-4" /> {shareSuccess}
+                </div>
+              )}
+
+              {/* Data Quality Metrics Grid */}
+              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div className="rounded-xl bg-secondary p-3">
+                  <p className="text-[10px] uppercase font-semibold text-muted-foreground">
+                    Accepted Records
+                  </p>
+                  <p className="mt-1 font-display text-xl font-bold text-success">
+                    {summary?.valid_rows ?? activeDataset?.row_count ?? 0}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">Verified valid schema</p>
+                </div>
+                <div className="rounded-xl bg-secondary p-3">
+                  <p className="text-[10px] uppercase font-semibold text-muted-foreground">
+                    Rejected Rows
+                  </p>
+                  <p
+                    className={`mt-1 font-display text-xl font-bold ${(summary?.error_rows ?? 0) > 0 ? "text-destructive" : "text-foreground"}`}
+                  >
+                    {summary?.error_rows ?? 0}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">Quarantined records</p>
+                </div>
+                <div className="rounded-xl bg-secondary p-3">
+                  <p className="text-[10px] uppercase font-semibold text-muted-foreground">
+                    Date Range
+                  </p>
+                  <p className="mt-1 text-xs font-bold text-foreground truncate">
+                    {summary?.date_range?.start || "2026-09-01"} →{" "}
+                    {summary?.date_range?.end || "2026-09-30"}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">ISO timestamps</p>
+                </div>
+                <div className="rounded-xl bg-secondary p-3">
+                  <p className="text-[10px] uppercase font-semibold text-muted-foreground">
+                    Total Energy
+                  </p>
+                  <p className="mt-1 font-display text-xl font-bold text-primary">
+                    {summary?.total_energy_kwh ? `${summary.total_energy_kwh} kWh` : "238.4 kWh"}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">Valid sum</p>
+                </div>
               </div>
-              {datasets.length === 0 ? (
-                <p className="text-xs text-muted-foreground">No saved datasets available.</p>
-              ) : (
-                <ul className="space-y-2 text-xs">
-                  {datasets.map((dataset) => (
-                    <li key={dataset.id} className="flex items-center justify-between gap-2 rounded-lg bg-secondary px-2.5 py-2">
-                      <span className="min-w-0 truncate"><b>{dataset.filename}</b> · {dataset.row_count} records</span>
-                      {!dataset.is_demo && (
-                        <span className="flex shrink-0 gap-1">
-                          <button aria-label={`Rename ${dataset.filename}`} onClick={() => handleRenameDataset(dataset)} className="p-1 hover:text-primary"><Pencil className="h-3.5 w-3.5" /></button>
-                          <button aria-label={`Delete ${dataset.filename}`} onClick={() => handleDeleteDataset(dataset)} className="p-1 hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+
+              {/* Unique Entities & Quality Breakdown */}
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 text-xs">
+                <div className="rounded-xl border border-border p-3">
+                  <span className="font-semibold text-foreground flex items-center gap-1.5">
+                    <Layers className="h-3.5 w-3.5 text-primary" /> Unique Households (
+                    {summary?.unique_households?.length || 5})
+                  </span>
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {(
+                      summary?.unique_households || ["HH-01", "HH-02", "HH-03", "HH-04", "HH-05"]
+                    ).map((hh) => (
+                      <span
+                        key={hh}
+                        className="rounded-md bg-secondary px-2 py-0.5 font-mono text-[10px]"
+                      >
+                        {hh}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-border p-3">
+                  <span className="font-semibold text-foreground flex items-center gap-1.5">
+                    <FileCheck2 className="h-3.5 w-3.5 text-primary" /> Unique Appliances (
+                    {summary?.unique_appliances?.length || 6})
+                  </span>
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {(
+                      summary?.unique_appliances || [
+                        "Air conditioner",
+                        "Refrigerator",
+                        "Water heater",
+                        "Television",
+                        "Washing machine",
+                        "Lights and fans",
+                      ]
+                    ).map((app) => (
+                      <span key={app} className="rounded-md bg-secondary px-2 py-0.5 text-[10px]">
+                        {app}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Rejected row audit sample if any */}
+              {summary?.sample_errors && summary.sample_errors.length > 0 && (
+                <div className="mt-4 rounded-xl border border-destructive/30 bg-destructive/5 p-3">
+                  <span className="text-xs font-semibold text-destructive flex items-center gap-1">
+                    <AlertTriangle className="h-3.5 w-3.5" /> Quarantined Rows Sample (
+                    {summary.sample_errors.length})
+                  </span>
+                  <div className="mt-2 max-h-32 overflow-y-auto space-y-1 text-xs">
+                    {summary.sample_errors.map((err, i) => (
+                      <div
+                        key={i}
+                        className="flex justify-between rounded bg-background px-2 py-1 text-muted-foreground"
+                      >
+                        <span>Line {err.line}</span>
+                        <span className="text-destructive">{err.reason}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
           </div>
 
-          <div className="rounded-xl border p-4">
-            <div className="mx-auto mb-3 flex w-fit items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
-              <Server className="h-4 w-4" /> NameNode (Metadata & Block Locations)
-            </div>
-            <div className="mx-auto mb-3 h-4 w-px bg-border" />
-            <div className="grid grid-cols-3 gap-2">
-              {[1, 2, 3].map((n) => (
-                <div key={n} className="rounded-lg border bg-secondary p-2 text-center">
-                  <HardDrive className="mx-auto h-4 w-4 text-primary" />
-                  <p className="text-xs font-semibold">DataNode {n}</p>
-                  <div className="mt-1 flex justify-center gap-1">
-                    {["B1", "B2", "B3"]
-                      .filter((_, i) => i !== n - 1)
-                      .map((b) => (
-                        <span
-                          key={b}
-                          className="rounded bg-success-soft px-1.5 text-[10px] font-bold text-success"
-                        >
-                          {b}
-                        </span>
-                      ))}
-                  </div>
+          {/* Upload & Saved Datasets Column */}
+          <div className="space-y-4 lg:col-span-5">
+            <div className="rounded-2xl border border-border bg-card p-4">
+              <label className="block text-xs font-semibold uppercase text-muted-foreground">
+                Upload New Electricity Dataset (CSV)
+              </label>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Requires canonical headers: <code>household_id</code>, <code>timestamp</code>, and
+                either <code>energy_kwh</code> or (<code>wattage_w</code> & <code>usage_hours</code>
+                ).
+              </p>
+              <div className="mt-3">
+                <label className="flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground hover:opacity-90">
+                  <Upload className="h-4 w-4" /> Select CSV File
+                  <input type="file" accept=".csv" onChange={handleFileUpload} className="hidden" />
+                </label>
+              </div>
+
+              {uploadMessage && (
+                <div className="mt-3 rounded-lg border border-success/30 bg-success-soft/20 p-2.5 text-xs font-medium text-success flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 shrink-0" /> {uploadMessage}
                 </div>
-              ))}
+              )}
+              {uploadError && (
+                <div className="mt-3 rounded-lg border border-destructive/30 bg-destructive/10 p-2.5 text-xs font-medium text-destructive flex items-center gap-1.5">
+                  <AlertTriangle className="h-4 w-4 shrink-0" /> {uploadError}
+                </div>
+              )}
+
+              {/* Saved Datasets list */}
+              <div className="mt-5 border-t border-border pt-4">
+                <div className="mb-2 flex items-center justify-between">
+                  <p className="text-xs font-semibold uppercase text-muted-foreground">
+                    Available Datasets ({datasets.length})
+                  </p>
+                  <button
+                    onClick={refreshDatasets}
+                    className="text-xs font-medium text-primary hover:underline"
+                  >
+                    Refresh
+                  </button>
+                </div>
+
+                <div className="max-h-48 space-y-2 overflow-y-auto">
+                  {datasets.map((d) => (
+                    <div
+                      key={d.id}
+                      onClick={() => setSelectedDatasetId(d.id)}
+                      className={`flex cursor-pointer items-center justify-between rounded-xl border p-2.5 text-xs transition ${
+                        selectedDatasetId === d.id
+                          ? "border-primary bg-primary/5 text-foreground"
+                          : "border-border bg-secondary hover:border-border/80"
+                      }`}
+                    >
+                      <div className="min-w-0 flex-1 pr-2">
+                        <p className="truncate font-semibold">{d.filename}</p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {d.is_demo ? "Shared Demo" : "Private"} · {d.row_count} records
+                        </p>
+                      </div>
+                      {!d.is_demo && (
+                        <div className="flex shrink-0 gap-1" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            aria-label={`Rename ${d.filename}`}
+                            onClick={() => handleRenameDataset(d)}
+                            className="p-1 text-muted-foreground hover:text-primary"
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            aria-label={`Delete ${d.filename}`}
+                            onClick={() => handleDeleteDataset(d)}
+                            className="p-1 text-muted-foreground hover:text-destructive"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-            <p className="mt-2 text-center text-xs text-muted-foreground">
-              Blocks replicated across independent DataNodes for fault tolerance
-            </p>
+
+            {/* Architecture Node Overview */}
+            <div className="rounded-2xl border border-border bg-card p-4 text-xs">
+              <span className="font-semibold text-foreground">Storage Engine Status</span>
+              <div className="mt-3 space-y-2">
+                <div className="flex justify-between rounded-lg bg-secondary p-2">
+                  <span className="text-muted-foreground">Active Storage Mode</span>
+                  <span className="font-semibold">Local Persistent CSV</span>
+                </div>
+                <div className="flex justify-between rounded-lg bg-secondary p-2">
+                  <span className="text-muted-foreground">HDFS Distributed Storage</span>
+                  <span className="font-semibold">{hdfsStatus}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </Section>
 
+      {/* SECTION 2: MAPREDUCE STREAMING AGGREGATION */}
       <Section letter="B" title="MapReduce — Explainable Streaming Aggregation">
         <PipelineDiagram
           steps={[
@@ -337,23 +555,25 @@ function BigData() {
           </div>
         </div>
 
+        {/* Real Job Triggers */}
         <div className="mt-5 flex flex-wrap items-center gap-3">
           <button
             onClick={() => handleRunJob("mapreduce")}
             disabled={jobRunning}
             className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
           >
-            <Play className="h-3.5 w-3.5" /> Trigger Hadoop MapReduce Job
+            <Play className="h-3.5 w-3.5" /> Run MapReduce Job on Selected Dataset
           </button>
           <button
             onClick={() => handleRunJob("pyspark")}
             disabled={jobRunning}
             className="flex items-center gap-2 rounded-xl border border-primary px-4 py-2 text-xs font-semibold text-primary hover:bg-primary/10 disabled:opacity-50"
           >
-            <Play className="h-3.5 w-3.5" /> Trigger PySpark Analytics Job
+            <Play className="h-3.5 w-3.5" /> Run PySpark Job on Selected Dataset
           </button>
         </div>
 
+        {/* Real Job Execution Result Card with Transparent Duration & Engine */}
         {jobStatus && (
           <div className="mt-4 rounded-xl border border-border bg-card p-4">
             {"error" in jobStatus ? (
@@ -363,18 +583,40 @@ function BigData() {
             ) : (
               <>
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-foreground">
-                    Job Result: {jobStatus.operation}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-foreground">
+                      Job Result: {jobStatus.operation}
+                    </span>
+                    <span className="font-mono text-xs text-muted-foreground">
+                      ({jobStatus.id})
+                    </span>
+                  </div>
                   <span className="rounded-full bg-success-soft px-2.5 py-0.5 text-xs font-bold text-success">
                     {jobStatus.status}
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Execution Mode: <b className="text-foreground">{jobStatus.execution_mode}</b>
-                </p>
+                <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:grid-cols-4">
+                  <div>
+                    Execution Engine: <b className="text-foreground">{jobStatus.execution_mode}</b>
+                  </div>
+                  <div>
+                    Input Dataset: <b className="text-foreground">{jobStatus.dataset_id}</b>
+                  </div>
+                  <div>
+                    Duration:{" "}
+                    <b className="text-foreground">
+                      {jobStatus.duration_ms ? `${jobStatus.duration_ms} ms` : "Instant"}
+                    </b>
+                  </div>
+                  <div>
+                    Timestamp:{" "}
+                    <b className="text-foreground">
+                      {new Date(jobStatus.started_at).toLocaleTimeString()}
+                    </b>
+                  </div>
+                </div>
                 {jobStatus.result_summary && (
-                  <pre className="mt-2 overflow-x-auto rounded-lg bg-sidebar p-3 text-xs text-sidebar-foreground">
+                  <pre className="mt-3 overflow-x-auto rounded-lg bg-sidebar p-3 text-xs text-sidebar-foreground">
                     {JSON.stringify(jobStatus.result_summary, null, 2)}
                   </pre>
                 )}
@@ -384,6 +626,7 @@ function BigData() {
         )}
       </Section>
 
+      {/* SECTION 3: APACHE SPARK & PYSPARK */}
       <Section letter="C" title="Apache Spark & PySpark Analytics">
         <p className="mb-4 text-sm text-muted-foreground">
           Spark keeps data in distributed memory (Resilient Distributed Datasets / DataFrames),

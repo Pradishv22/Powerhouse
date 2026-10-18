@@ -1,5 +1,13 @@
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { apiGetCurrentUser, apiLogin, apiRegister, apiLogout, type User } from "@/services/api";
+import {
+  apiGetCurrentUser,
+  apiLogin,
+  apiRegister,
+  apiLogout,
+  apiUpdateProfile,
+  apiChangePassword,
+  type User,
+} from "@/services/api";
 
 type AuthContextType = {
   user: User | null;
@@ -7,7 +15,12 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<User>;
   register: (name: string, email: string, password: string, confirm: string) => Promise<User>;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<User | null>;
+  updateProfile: (name: string) => Promise<User>;
+  changePassword: (curr: string, next: string, confirm: string) => Promise<{ message: string }>;
   isAuthenticated: boolean;
+  isHousehold: boolean;
+  isAnalyst: boolean;
   isAdmin: boolean;
 };
 
@@ -16,6 +29,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const refreshUser = async () => {
+    try {
+      const curr = await apiGetCurrentUser();
+      setUser(curr);
+      return curr;
+    } catch {
+      setUser(null);
+      return null;
+    }
+  };
 
   // Check current session from backend on mount
   useEffect(() => {
@@ -56,6 +80,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
+  const updateProfile = async (name: string) => {
+    const updated = await apiUpdateProfile(name);
+    setUser(updated);
+    return updated;
+  };
+
+  const changePassword = async (curr: string, next: string, confirm: string) => {
+    return apiChangePassword(curr, next, confirm);
+  };
+
+  const role = user?.role || "user";
+  const isAdmin = role === "admin";
+  const isAnalyst = role === "analyst";
+  const isHousehold = role === "user" || role === "household";
+
   return (
     <AuthContext.Provider
       value={{
@@ -64,8 +103,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        refreshUser,
+        updateProfile,
+        changePassword,
         isAuthenticated: !!user,
-        isAdmin: user?.role === "admin",
+        isHousehold,
+        isAnalyst,
+        isAdmin,
       }}
     >
       {children}

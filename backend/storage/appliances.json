@@ -339,5 +339,104 @@
     "quantity": 1,
     "created_at": "2026-10-18T07:20:28.351684+00:00",
     "updated_at": "2026-10-18T07:20:28.351684+00:00"
+  },
+  {
+    "id": "d4e1be73-6c1d-446c-9abf-41c874e36518",
+    "owner_id": "hh2-id",
+    "name": "User 2 AC",
+    "category": "Cooling",
+    "wattage_w": 1500.0,
+    "daily_usage_hours": 6.0,
+    "quantity": 1,
+    "created_at": "2026-10-18T08:25:37.647909+00:00",
+    "updated_at": "2026-10-18T08:25:37.647909+00:00"
+  },
+  {
+    "id": "65b2a36b-bef0-4e2f-82a3-2e37224490b2",
+    "owner_id": "hh2-id",
+    "name": "User 2 AC",
+    "category": "Cooling",
+    "wattage_w": 1500.0,
+    "daily_usage_hours": 6.0,
+    "quantity": 1,
+    "created_at": "2026-10-18T08:40:41.473460+00:00",
+    "updated_at": "2026-10-18T08:40:41.473460+00:00"
+  },
+  {
+    "id": "cfea5c37-1535-46c8-bfb0-38c8897bf259",
+    "owner_id": "hh2-id",
+    "name": "User 2 AC",
+    "category": "Cooling",
+    "wattage_w": 1500.0,
+    "daily_usage_hours": 6.0,
+    "quantity": 1,
+    "created_at": "2026-10-18T08:53:18.752875+00:00",
+    "updated_at": "2026-10-18T08:53:18.752875+00:00"
+  },
+  {
+    "id": "c82b2c8c-fda4-40b4-b30c-c3874ecbae93",
+    "owner_id": "admin-seed-id",
+    "name": "Air conditioner",
+    "category": "Cooling",
+    "wattage_w": 1500,
+    "daily_usage_hours": 6,
+    "quantity": 1,
+    "created_at": "2026-10-18T09:07:49.728796+00:00",
+    "updated_at": "2026-10-18T09:07:49.728796+00:00"
+  },
+  {
+    "id": "e2218e4c-9617-4404-bfaf-e3c99e530a90",
+    "owner_id": "admin-seed-id",
+    "name": "Refrigerator",
+    "category": "Kitchen",
+    "wattage_w": 200,
+    "daily_usage_hours": 24,
+    "quantity": 1,
+    "created_at": "2026-10-18T09:07:49.732860+00:00",
+    "updated_at": "2026-10-18T09:07:49.732860+00:00"
+  },
+  {
+    "id": "1299b76d-08ff-4d76-808f-3e201eb4c698",
+    "owner_id": "admin-seed-id",
+    "name": "Television",
+    "category": "Entertainment",
+    "wattage_w": 120,
+    "daily_usage_hours": 5,
+    "quantity": 1,
+    "created_at": "2026-10-18T09:07:49.735860+00:00",
+    "updated_at": "2026-10-18T09:07:49.735860+00:00"
+  },
+  {
+    "id": "44d3d36e-7d2f-4f92-af67-db31af97b725",
+    "owner_id": "admin-seed-id",
+    "name": "Washing machine",
+    "category": "Laundry",
+    "wattage_w": 500,
+    "daily_usage_hours": 1,
+    "quantity": 1,
+    "created_at": "2026-10-18T09:07:49.737859+00:00",
+    "updated_at": "2026-10-18T09:07:49.737859+00:00"
+  },
+  {
+    "id": "5a312226-9ff3-41b2-b97b-be9223e8387e",
+    "owner_id": "admin-seed-id",
+    "name": "Lights and fans",
+    "category": "Lighting",
+    "wattage_w": 300,
+    "daily_usage_hours": 8,
+    "quantity": 1,
+    "created_at": "2026-10-18T09:07:49.739862+00:00",
+    "updated_at": "2026-10-18T09:07:49.739862+00:00"
+  },
+  {
+    "id": "d0e30a44-7654-4a9b-82f0-eb10ceee9f85",
+    "owner_id": "admin-seed-id",
+    "name": "Water heater",
+    "category": "Heating",
+    "wattage_w": 2000,
+    "daily_usage_hours": 1,
+    "quantity": 1,
+    "created_at": "2026-10-18T09:07:49.742859+00:00",
+    "updated_at": "2026-10-18T09:07:49.742859+00:00"
   }
 ]

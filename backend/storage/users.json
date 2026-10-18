@@ -38,5 +38,52 @@
     "is_active": true,
     "created_at": "2026-10-18T07:20:02.793914+00:00",
     "updated_at": "2026-10-18T07:20:02.793914+00:00"
+  },
+  {
+    "id": "analyst-seed-id",
+    "name": "Energy Analyst",
+    "email": "analyst@powerwise.local",
+    "password_hash": "scrypt:32768:8:1$C2X8Q0KeI93biUML$f8eaa98def90f7959822c52f5b99b9f372f20b8979db3c5a2175404985d7c2335c48b620b4d8e0b511efbf1e4a107235856d589b97ff2b331f7c0e5efe4834d0",
+    "role": "analyst",
+    "is_active": true,
+    "created_at": "2026-10-18T08:24:15.320927+00:00",
+    "updated_at": "2026-10-18T08:24:15.320927+00:00"
+  },
+  {
+    "id": "9cdb35b1-4c35-4376-815e-f738069c4db6",
+    "name": "Attacker",
+    "email": "attacker@test.com",
+    "password_hash": "scrypt:32768:8:1$6CRzm6qQgj4GDo10$bc2a71f16fa90757594cbc4d857d203633d9ad6ec32371c1d7d51d4fa56dc6b4ba43396e76ab3de78554dd96134d6b4fa26af90a8390f828fcb90f523ba03ea7",
+    "role": "user",
+    "is_active": true,
+    "created_at": "2026-10-18T08:53:17.908178+00:00",
+    "updated_at": "2026-10-18T08:53:17.908178+00:00"
+  },
+  {
+    "id": "hh1-id",
+    "name": "Household User One",
+    "email": "hh1@test.com",
+    "password_hash": "scrypt:32768:8:1$nktreQQPDJUMgHcW$4cdaa8cbd05ab69f57aa7f40e4a7123a5c4d5e9e22ba6346a60ae0f48c006aaaada060cc5c0af358c63a5f279ab29e593797d19a6b434f0fbad4413f0676ff5d",
+    "role": "user",
+    "is_active": true,
+    "created_at": "2026-10-18T00:00:00Z"
+  },
+  {
+    "id": "hh2-id",
+    "name": "Household User Two",
+    "email": "hh2@test.com",
+    "password_hash": "scrypt:32768:8:1$FS0xBNs3Cn5pLF3U$79a1697cb7a19a9ee48f0d4c99f9646b75c2b105e4f9d5354eff9c8e8b817fbf907e8416082eb8e34ca66e69c968175f0b5f76d21e7fe75d02caea71863cce85",
+    "role": "user",
+    "is_active": true,
+    "created_at": "2026-10-18T00:00:00Z"
+  },
+  {
+    "id": "analyst-id",
+    "name": "Test Energy Analyst",
+    "email": "analyst@test.com",
+    "password_hash": "scrypt:32768:8:1$6BHfyO8wzGNQpjLh$493b92c45125347642015c2f8cc07aee5dec93bf4e07a3b77c21e8e3df4cad0bc2f21f181720e3117817d520f6809325e37a888ba88bd191963cdaa0cb1005e7",
+    "role": "analyst",
+    "is_active": true,
+    "created_at": "2026-10-18T00:00:00Z"
   }
 ]

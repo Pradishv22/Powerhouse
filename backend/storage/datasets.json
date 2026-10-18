@@ -1,22 +1,5 @@
 [
   {
-    "id": "c8ad918f-4202-4505-8e1e-4155aa0b89d1",
-    "owner_id": "21649fb1-3430-4529-b594-d1feae054e6f",
-    "filename": "powerwise_sample_electricity_usage_with_timestamp.csv",
-    "saved_path": "C:\\Users\\Pradish\\OneDrive\\Desktop\\PowerWise\\data\\uploads\\c8ad918f-4202-4505-8e1e-4155aa0b89d1.csv",
-    "storage_mode": "local_csv",
-    "row_count": 45,
-    "status": "Ready",
-    "validation_summary": {
-      "total_rows": 45,
-      "valid_rows": 45,
-      "error_rows": 0,
-      "calculated_energy_count": 0,
-      "sample_errors": []
-    },
-    "created_at": "2026-10-18T07:24:17.732429+00:00"
-  },
-  {
     "id": "demo-dataset-default",
     "owner_id": "system",
     "filename": "sample_electricity_records.csv",
@@ -30,23 +13,6 @@
       "error_rows": 0,
       "calculated_energy_count": 0
     },
-    "created_at": "2026-10-18T07:46:36.400994+00:00"
-  },
-  {
-    "id": "79ce7e8f-4070-4cc5-ac21-34a971a0b7af",
-    "owner_id": "21649fb1-3430-4529-b594-d1feae054e6f",
-    "filename": "powerwise_sample_electricity_usage_with_timestamp.csv",
-    "saved_path": "C:\\Users\\Pradish\\OneDrive\\Desktop\\PowerWise\\data\\uploads\\79ce7e8f-4070-4cc5-ac21-34a971a0b7af.csv",
-    "storage_mode": "local_csv",
-    "row_count": 45,
-    "status": "Ready",
-    "validation_summary": {
-      "total_rows": 45,
-      "valid_rows": 45,
-      "error_rows": 0,
-      "calculated_energy_count": 0,
-      "sample_errors": []
-    },
-    "created_at": "2026-10-18T07:52:50.695987+00:00"
+    "created_at": "2026-10-18T08:09:47.334108+00:00"
   }
 ]

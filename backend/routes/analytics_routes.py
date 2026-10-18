@@ -1,35 +1,52 @@
 import os
+import time
 import uuid
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from flask import Blueprint, request, jsonify, g
 from backend.database import db
-from backend.auth import login_required
+from backend.auth import login_required, normalize_role, ROLE_ADMIN, ROLE_ANALYST, ROLE_HOUSEHOLD
 from backend.config import Config
-from backend.routes.dataset_routes import validate_and_parse_csv
+from backend.routes.dataset_routes import validate_and_parse_csv, check_dataset_access, seed_default_demo_dataset
+from backend.audit import log_audit_event
 
 analytics_bp = Blueprint("analytics", __name__, url_prefix="/api/v1/analytics")
 
 
-def load_dataset_records(dataset_id: str = None):
-    """Load validated records from specified dataset or fallback to sample CSV."""
+def load_dataset_records_with_auth(dataset_id: str = None, user: dict = None):
+    """
+    Load validated records from specified dataset after strictly enforcing authorization.
+    Returns (records_list, None) or (None, (error_json, status_code)).
+    """
+    seed_default_demo_dataset()
+    if not dataset_id:
+        dataset_id = "demo-dataset-default"
+
+    # Enforce access control on the dataset
+    dataset, error = check_dataset_access(dataset_id, user, required_permission="read")
+    if error:
+        return None, error
+
     filepath = None
-    if dataset_id:
-        ds = db.datasets.find_one({"id": dataset_id})
-        if ds and ds.get("saved_path") and os.path.exists(ds["saved_path"]):
-            filepath = Path(ds["saved_path"])
+    if dataset.get("saved_path") and os.path.exists(dataset["saved_path"]):
+        filepath = Path(dataset["saved_path"])
+    else:
+        sample_path = Config.DATA_DIR / "sample_electricity_records.csv"
+        if sample_path.exists():
+            filepath = sample_path
 
     if not filepath or not filepath.exists():
-        filepath = Config.DATA_DIR / "sample_electricity_records.csv"
+        return [], None
 
-    if not filepath.exists():
-        return []
-
-    with open(filepath, "r", encoding="utf-8") as f:
-        content = f.read()
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+    except Exception as e:
+        return None, (jsonify({"error": {"code": "FILE_READ_ERROR", "message": str(e)}}), 500)
 
     res = validate_and_parse_csv(content)
-    return res.get("rows", [])
+    records = res.get("rows", [])
+    return records, None
 
 
 @analytics_bp.route("/summary", methods=["GET"])
@@ -37,7 +54,10 @@ def load_dataset_records(dataset_id: str = None):
 def get_summary():
     dataset_id = request.args.get("dataset_id")
     tariff = float(request.args.get("tariff", 8.0))
-    records = load_dataset_records(dataset_id)
+
+    records, error = load_dataset_records_with_auth(dataset_id, g.current_user)
+    if error:
+        return error
 
     if not records:
         return jsonify({
@@ -50,7 +70,7 @@ def get_summary():
             "potential_savings": 15,
             "efficiency_score": 75,
             "record_count": 0,
-            "execution_mode": "Local demo",
+            "execution_mode": "Local demo (No records)",
             "tariff": tariff,
         })
 
@@ -90,7 +110,7 @@ def get_summary():
         "potential_savings": 15,
         "efficiency_score": 78,
         "record_count": len(records),
-        "execution_mode": "Local demo (Flask Analytics Engine)",
+        "execution_mode": "Local Python Analytics Engine",
         "tariff": tariff,
     })
 
@@ -100,7 +120,10 @@ def get_summary():
 def get_consumption_series():
     dataset_id = request.args.get("dataset_id")
     period = request.args.get("period", "daily").lower()
-    records = load_dataset_records(dataset_id)
+
+    records, error = load_dataset_records_with_auth(dataset_id, g.current_user)
+    if error:
+        return error
 
     if not records:
         return jsonify({"series": [], "by_appliance": [], "by_household": []})
@@ -112,10 +135,12 @@ def get_consumption_series():
         if period == "monthly":
             key = date_str[:7]
         elif period == "weekly":
-            # Monday of that week
-            dt = datetime.fromisoformat(r["timestamp"].replace("Z", "+00:00"))
-            monday = dt - timedelta(days=dt.weekday())
-            key = monday.strftime("%Y-%m-%d")
+            try:
+                dt = datetime.fromisoformat(r["timestamp"].replace("Z", "+00:00"))
+                monday = dt - timedelta(days=dt.weekday())
+                key = monday.strftime("%Y-%m-%d")
+            except Exception:
+                key = date_str
         else:
             key = date_str
         series_map[key] = series_map.get(key, 0.0) + r["energy_kwh"]
@@ -165,35 +190,37 @@ def trigger_job():
     requested_engine = data.get("engine") or "local"  # 'pyspark', 'mapreduce', 'local'
 
     job_id = f"job-{uuid.uuid4().hex[:8]}"
+    start_time_sec = time.time()
     started_at = datetime.now(timezone.utc).isoformat()
 
-    # Detect execution mode truthfully
+    # Enforce authorization on dataset before processing
+    records, error = load_dataset_records_with_auth(dataset_id, g.current_user)
+    if error:
+        return error
+
+    if not records:
+        return jsonify({"error": {"code": "DATASET_EMPTY", "message": "No records in dataset to process."}}), 400
+
+    # Truthfully detect PySpark availability
     has_spark = False
     try:
-        import pyspark
+        import pyspark  # noqa: F401
         has_spark = True
     except ImportError:
         has_spark = False
 
-    records = load_dataset_records(dataset_id)
-    if not records:
-        return jsonify({"error": {"code": "DATASET_EMPTY", "message": "No records in dataset to process."}}), 400
-
     # Execute computation
     if operation == "clustering":
-        # Group households: calculate avg_daily, monthly_kwh, peak_usage
         hh_records = {}
         for r in records:
             hh = r["household_id"]
             hh_records.setdefault(hh, []).append(r)
 
         clusters_result = []
-        # Local K-means or rule-based cluster sorting for demonstration
         for hh, r_list in hh_records.items():
             total = sum(item["energy_kwh"] for item in r_list)
             days = len({item["timestamp"][:10] for item in r_list}) or 1
             avg_daily = total / days
-            # Sort into Low (< 10 kWh/day), Medium (10-20 kWh/day), High (> 20 kWh/day)
             cluster_name = "Low" if avg_daily < 10 else ("Medium" if avg_daily <= 20 else "High")
             clusters_result.append({
                 "household_id": hh,
@@ -203,9 +230,14 @@ def trigger_job():
                 "cluster": cluster_name,
             })
 
-        execution_mode = "PySpark MLlib (KMeans k=3)" if (requested_engine == "pyspark" and has_spark) else "Local demo (Python K-means fallback)"
-        engine_used = "pyspark" if (requested_engine == "pyspark" and has_spark) else "local_demo"
+        if requested_engine == "pyspark" and has_spark:
+            execution_mode = "PySpark MLlib (KMeans k=3)"
+            engine_used = "pyspark"
+        else:
+            execution_mode = "Local Python K-means Fallback (PySpark unavailable)"
+            engine_used = "local_python"
 
+        duration_ms = round((time.time() - start_time_sec) * 1000, 2)
         job_doc = {
             "id": job_id,
             "owner_id": g.current_user["id"],
@@ -214,6 +246,7 @@ def trigger_job():
             "engine": engine_used,
             "execution_mode": execution_mode,
             "status": "Completed",
+            "duration_ms": duration_ms,
             "started_at": started_at,
             "completed_at": datetime.now(timezone.utc).isoformat(),
             "result_summary": {
@@ -232,11 +265,17 @@ def trigger_job():
             app_totals[r["appliance_name"]] = round(app_totals.get(r["appliance_name"], 0.0) + r["energy_kwh"], 2)
             hh_totals[r["household_id"]] = round(hh_totals.get(r["household_id"], 0.0) + r["energy_kwh"], 2)
 
-        execution_mode = "Hadoop Streaming MapReduce" if requested_engine == "mapreduce" else (
-            "Apache Spark (PySpark)" if (requested_engine == "pyspark" and has_spark) else "Local demo (Python Stream)"
-        )
-        engine_used = requested_engine if (requested_engine != "pyspark" or has_spark) else "local_demo"
+        if requested_engine == "pyspark" and has_spark:
+            execution_mode = "Apache Spark (PySpark DataFrame)"
+            engine_used = "pyspark"
+        elif requested_engine == "mapreduce":
+            execution_mode = "Local MapReduce Stream (Python Streaming Fallback)"
+            engine_used = "local_mapreduce"
+        else:
+            execution_mode = "Local Python Analytics Engine"
+            engine_used = "local_python"
 
+        duration_ms = round((time.time() - start_time_sec) * 1000, 2)
         job_doc = {
             "id": job_id,
             "owner_id": g.current_user["id"],
@@ -245,6 +284,7 @@ def trigger_job():
             "engine": engine_used,
             "execution_mode": execution_mode,
             "status": "Completed",
+            "duration_ms": duration_ms,
             "started_at": started_at,
             "completed_at": datetime.now(timezone.utc).isoformat(),
             "result_summary": {
@@ -257,6 +297,21 @@ def trigger_job():
         }
 
     db.jobs.insert_one(job_doc)
+
+    log_audit_event(
+        event_type="JOB_TRIGGERED",
+        status="SUCCESS",
+        details={
+            "job_id": job_id,
+            "dataset_id": dataset_id,
+            "operation": job_doc["operation"],
+            "execution_mode": job_doc["execution_mode"],
+            "duration_ms": job_doc["duration_ms"],
+        },
+        user_id=g.current_user["id"],
+        user_email=g.current_user.get("email"),
+    )
+
     return jsonify({"message": "Job completed successfully.", "job": job_doc}), 201
 
 
@@ -267,8 +322,9 @@ def get_job_status(job_id):
     if not job:
         return jsonify({"error": {"code": "NOT_FOUND", "message": "Job not found."}}), 404
 
-    # Ownership check
-    if job.get("owner_id") != g.current_user["id"] and g.current_user.get("role") != "admin":
+    # Ownership / RBAC check: owner, analyst or admin
+    role = normalize_role(g.current_user.get("role"))
+    if job.get("owner_id") != g.current_user["id"] and role not in (ROLE_ADMIN, ROLE_ANALYST):
         return jsonify({"error": {"code": "FORBIDDEN", "message": "Access denied to job."}}), 403
 
     return jsonify({"job": job})
@@ -277,9 +333,11 @@ def get_job_status(job_id):
 @analytics_bp.route("/clusters", methods=["GET"])
 @login_required
 def get_clusters():
-    """Return latest clustering results, either from a completed job or generated from active dataset."""
+    """Return latest clustering results for active dataset with authorization enforcement."""
     dataset_id = request.args.get("dataset_id")
-    records = load_dataset_records(dataset_id)
+    records, error = load_dataset_records_with_auth(dataset_id, g.current_user)
+    if error:
+        return error
 
     hh_records = {}
     for r in records:

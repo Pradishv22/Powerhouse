@@ -1,0 +1,2303 @@
+[
+  {
+    "id": "audit-acee459d98ff",
+    "timestamp": "2026-10-18T08:24:15.606298+00:00",
+    "event_type": "REGISTER",
+    "status": "SUCCESS",
+    "user_id": "fecf96a3-8643-4eff-a342-f479f6acef88",
+    "user_email": "alex.dev@gmail.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "name": "Alex Developer",
+      "assigned_role": "user"
+    }
+  },
+  {
+    "id": "audit-9a4d2658fb7e",
+    "timestamp": "2026-10-18T08:24:15.702355+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "fecf96a3-8643-4eff-a342-f479f6acef88",
+    "user_email": "alex.dev@gmail.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-e13408b38eec",
+    "timestamp": "2026-10-18T08:24:15.705354+00:00",
+    "event_type": "LOGOUT",
+    "status": "SUCCESS",
+    "user_id": "fecf96a3-8643-4eff-a342-f479f6acef88",
+    "user_email": "alex.dev@gmail.com",
+    "ip_address": "127.0.0.1",
+    "details": {}
+  },
+  {
+    "id": "audit-d7356f8a8d96",
+    "timestamp": "2026-10-18T08:24:15.889115+00:00",
+    "event_type": "LOGIN_FAILURE",
+    "status": "FAILED",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "reason": "INVALID_CREDENTIALS",
+      "attempted_email": "student@college.edu"
+    }
+  },
+  {
+    "id": "audit-0729cfae91f1",
+    "timestamp": "2026-10-18T08:24:16.065307+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-c4e63a0dc78f",
+    "timestamp": "2026-10-18T08:24:16.068218+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/overview",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-ef08a748c140",
+    "timestamp": "2026-10-18T08:24:16.153393+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-f3c5d2d11e2c",
+    "timestamp": "2026-10-18T08:24:16.333651+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-06d418b2761e",
+    "timestamp": "2026-10-18T08:24:16.339058+00:00",
+    "event_type": "APPLIANCE_CREATED",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "appliance_id": "9ec32194-88d9-4865-bf66-7f5141e9d93c",
+      "name": "Study Room AC",
+      "wattage_w": 1000.0
+    }
+  },
+  {
+    "id": "audit-8ee0c043eec0",
+    "timestamp": "2026-10-18T08:24:16.526456+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-ec2215a7b7b1",
+    "timestamp": "2026-10-18T08:24:16.569837+00:00",
+    "event_type": "DATASET_UPLOAD",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "898f2f73-0d68-4f7b-9ff3-4e7c65fc373c",
+      "filename": "usage.csv",
+      "row_count": 1,
+      "total_energy_kwh": 2.5
+    }
+  },
+  {
+    "id": "audit-4e5f6a2f5c9f",
+    "timestamp": "2026-10-18T08:24:16.573978+00:00",
+    "event_type": "DATASET_RENAME",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "898f2f73-0d68-4f7b-9ff3-4e7c65fc373c",
+      "old_filename": "usage.csv",
+      "new_filename": "renamed-usage.csv"
+    }
+  },
+  {
+    "id": "audit-576ccf2585ea",
+    "timestamp": "2026-10-18T08:24:16.580578+00:00",
+    "event_type": "DATASET_DELETE",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "898f2f73-0d68-4f7b-9ff3-4e7c65fc373c",
+      "filename": "renamed-usage.csv"
+    }
+  },
+  {
+    "id": "audit-b1bdc8af521a",
+    "timestamp": "2026-10-18T08:24:16.757619+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-85ffe4920761",
+    "timestamp": "2026-10-18T08:24:16.938404+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-f1bf06803783",
+    "timestamp": "2026-10-18T08:24:16.941403+00:00",
+    "event_type": "REPORT_EXPORT",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "default",
+      "exported_rows": 30,
+      "tariff": 8.0
+    }
+  },
+  {
+    "id": "audit-cb51da5cba76",
+    "timestamp": "2026-10-18T08:25:34.616261+00:00",
+    "event_type": "REGISTER",
+    "status": "SUCCESS",
+    "user_id": "08d1d2b5-9fd4-4646-9b01-1ccfad9a15df",
+    "user_email": "alex.dev@gmail.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "name": "Alex Developer",
+      "assigned_role": "user"
+    }
+  },
+  {
+    "id": "audit-b1b948f81f02",
+    "timestamp": "2026-10-18T08:25:34.699826+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "08d1d2b5-9fd4-4646-9b01-1ccfad9a15df",
+    "user_email": "alex.dev@gmail.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-586ead277b8d",
+    "timestamp": "2026-10-18T08:25:34.703045+00:00",
+    "event_type": "LOGOUT",
+    "status": "SUCCESS",
+    "user_id": "08d1d2b5-9fd4-4646-9b01-1ccfad9a15df",
+    "user_email": "alex.dev@gmail.com",
+    "ip_address": "127.0.0.1",
+    "details": {}
+  },
+  {
+    "id": "audit-506c705bdf28",
+    "timestamp": "2026-10-18T08:25:34.884587+00:00",
+    "event_type": "LOGIN_FAILURE",
+    "status": "FAILED",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "reason": "INVALID_CREDENTIALS",
+      "attempted_email": "student@college.edu"
+    }
+  },
+  {
+    "id": "audit-5a8938dc6498",
+    "timestamp": "2026-10-18T08:25:35.092490+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-55bf8a0a4803",
+    "timestamp": "2026-10-18T08:25:35.095490+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/overview",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-e74cad602e16",
+    "timestamp": "2026-10-18T08:25:35.176006+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-6bfa67afbb19",
+    "timestamp": "2026-10-18T08:25:35.356527+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-4da26ef97a58",
+    "timestamp": "2026-10-18T08:25:35.361528+00:00",
+    "event_type": "APPLIANCE_CREATED",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "appliance_id": "ca31e5dc-60b4-4b16-a234-6045391e200e",
+      "name": "Study Room AC",
+      "wattage_w": 1000.0
+    }
+  },
+  {
+    "id": "audit-1ab3405afa67",
+    "timestamp": "2026-10-18T08:25:35.548221+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-82d50212699c",
+    "timestamp": "2026-10-18T08:25:35.582815+00:00",
+    "event_type": "DATASET_UPLOAD",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "4affac40-bb5c-4ce5-b513-368ec1dd0e01",
+      "filename": "usage.csv",
+      "row_count": 1,
+      "total_energy_kwh": 2.5
+    }
+  },
+  {
+    "id": "audit-ee7d4f269e12",
+    "timestamp": "2026-10-18T08:25:35.588120+00:00",
+    "event_type": "DATASET_RENAME",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "4affac40-bb5c-4ce5-b513-368ec1dd0e01",
+      "old_filename": "usage.csv",
+      "new_filename": "renamed-usage.csv"
+    }
+  },
+  {
+    "id": "audit-c45d753b279f",
+    "timestamp": "2026-10-18T08:25:35.594454+00:00",
+    "event_type": "DATASET_DELETE",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "4affac40-bb5c-4ce5-b513-368ec1dd0e01",
+      "filename": "renamed-usage.csv"
+    }
+  },
+  {
+    "id": "audit-58910d852a00",
+    "timestamp": "2026-10-18T08:25:35.775406+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-060d23ab549f",
+    "timestamp": "2026-10-18T08:25:35.958670+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-7bcede30f097",
+    "timestamp": "2026-10-18T08:25:35.963077+00:00",
+    "event_type": "REPORT_EXPORT",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "default",
+      "exported_rows": 30,
+      "tariff": 8.0
+    }
+  },
+  {
+    "id": "audit-29d479172191",
+    "timestamp": "2026-10-18T08:25:36.749338+00:00",
+    "event_type": "REGISTER",
+    "status": "SUCCESS",
+    "user_id": "8195a61c-2c00-4162-a5f6-a96a36e3bcfb",
+    "user_email": "attacker@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "name": "Attacker",
+      "assigned_role": "user"
+    }
+  },
+  {
+    "id": "audit-396c804f848d",
+    "timestamp": "2026-10-18T08:25:37.195417+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-d04abaa5bd68",
+    "timestamp": "2026-10-18T08:25:37.198414+00:00",
+    "event_type": "PROFILE_UPDATED",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "new_name": "Household Renamed"
+    }
+  },
+  {
+    "id": "audit-65c00cd079b0",
+    "timestamp": "2026-10-18T08:25:37.629043+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh2-id",
+    "user_email": "hh2@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-421026a21bf3",
+    "timestamp": "2026-10-18T08:25:37.648911+00:00",
+    "event_type": "APPLIANCE_CREATED",
+    "status": "SUCCESS",
+    "user_id": "hh2-id",
+    "user_email": "hh2@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "appliance_id": "d4e1be73-6c1d-446c-9abf-41c874e36518",
+      "name": "User 2 AC",
+      "wattage_w": 1500.0
+    }
+  },
+  {
+    "id": "audit-fb793d022ff3",
+    "timestamp": "2026-10-18T08:25:37.728908+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-20f927adf43b",
+    "timestamp": "2026-10-18T08:25:37.815500+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh2-id",
+    "user_email": "hh2@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-a11f869c75f8",
+    "timestamp": "2026-10-18T08:25:38.245049+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-e8b86b3c54b8",
+    "timestamp": "2026-10-18T08:25:38.247050+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/overview",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-0ad982503891",
+    "timestamp": "2026-10-18T08:25:38.249047+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/users",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-298eda386a7e",
+    "timestamp": "2026-10-18T08:25:38.251047+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/audit-logs",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-cfccfdfac92c",
+    "timestamp": "2026-10-18T08:25:38.336998+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "analyst"
+    }
+  },
+  {
+    "id": "audit-c24e4b2e5493",
+    "timestamp": "2026-10-18T08:25:38.339240+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/overview",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "analyst"
+    }
+  },
+  {
+    "id": "audit-c62a51639536",
+    "timestamp": "2026-10-18T08:25:38.341249+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/users",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "analyst"
+    }
+  },
+  {
+    "id": "audit-e77eb2b2c186",
+    "timestamp": "2026-10-18T08:25:38.762726+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-89656fe852f1",
+    "timestamp": "2026-10-18T08:25:38.766720+00:00",
+    "event_type": "ROLE_CHANGE",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "target_user_id": "hh1-id",
+      "target_user_email": "hh1@test.com",
+      "old_role": "user",
+      "new_role": "analyst"
+    }
+  },
+  {
+    "id": "audit-fe7fe3a1c23e",
+    "timestamp": "2026-10-18T08:25:38.770721+00:00",
+    "event_type": "ROLE_CHANGE",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "target_user_id": "hh1-id",
+      "target_user_email": "hh1@test.com",
+      "old_role": "analyst",
+      "new_role": "user"
+    }
+  },
+  {
+    "id": "audit-f6029018863d",
+    "timestamp": "2026-10-18T08:25:38.774721+00:00",
+    "event_type": "ACCOUNT_STATUS_CHANGE",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "target_user_id": "hh1-id",
+      "target_user_email": "hh1@test.com",
+      "is_active": false
+    }
+  },
+  {
+    "id": "audit-9dd4d59bfbf6",
+    "timestamp": "2026-10-18T08:25:38.778726+00:00",
+    "event_type": "LOGOUT",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {}
+  },
+  {
+    "id": "audit-9b797a8d1326",
+    "timestamp": "2026-10-18T08:25:38.859933+00:00",
+    "event_type": "LOGIN_FAILURE",
+    "status": "FAILED",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "reason": "ACCOUNT_DISABLED"
+    }
+  },
+  {
+    "id": "audit-830adf6a2a8c",
+    "timestamp": "2026-10-18T08:25:38.941673+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-30bd9b9d4470",
+    "timestamp": "2026-10-18T08:25:38.945670+00:00",
+    "event_type": "ACCOUNT_STATUS_CHANGE",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "target_user_id": "hh1-id",
+      "target_user_email": "hh1@test.com",
+      "is_active": true
+    }
+  },
+  {
+    "id": "audit-dd57bc19878a",
+    "timestamp": "2026-10-18T08:25:39.369696+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-51e9f62a2621",
+    "timestamp": "2026-10-18T08:25:39.394038+00:00",
+    "event_type": "DATASET_UPLOAD",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "d4db2c0c-dea8-4781-a2a8-cccba13ec00a",
+      "filename": "hh1_private.csv",
+      "row_count": 1,
+      "total_energy_kwh": 3.5
+    }
+  },
+  {
+    "id": "audit-46eb1eec96f8",
+    "timestamp": "2026-10-18T08:25:39.477963+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh2-id",
+    "user_email": "hh2@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-dd112e5a56f4",
+    "timestamp": "2026-10-18T08:25:39.565870+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "analyst"
+    }
+  },
+  {
+    "id": "audit-daf7deab33ea",
+    "timestamp": "2026-10-18T08:25:39.649418+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-df1a3ea93559",
+    "timestamp": "2026-10-18T08:25:39.653422+00:00",
+    "event_type": "DATASET_SHARED",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "d4db2c0c-dea8-4781-a2a8-cccba13ec00a",
+      "shared_with": [
+        "analyst-id"
+      ]
+    }
+  },
+  {
+    "id": "audit-1fbdfccb8fed",
+    "timestamp": "2026-10-18T08:25:39.735471+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "analyst"
+    }
+  },
+  {
+    "id": "audit-24c6b0bc36f2",
+    "timestamp": "2026-10-18T08:25:39.820445+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-1057cfe381e6",
+    "timestamp": "2026-10-18T08:25:39.825449+00:00",
+    "event_type": "DATASET_DELETE",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "d4db2c0c-dea8-4781-a2a8-cccba13ec00a",
+      "filename": "hh1_private.csv"
+    }
+  },
+  {
+    "id": "audit-5430e63e4031",
+    "timestamp": "2026-10-18T08:25:40.251073+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-9a1968b5413c",
+    "timestamp": "2026-10-18T08:25:40.674318+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-fc601bd1d38e",
+    "timestamp": "2026-10-18T08:25:40.680323+00:00",
+    "event_type": "SAVINGS_SCENARIO_SAVED",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "scenario_id": "scen-77417f53",
+      "name": "Summer AC Cutback",
+      "appliance_name": "Living Room AC",
+      "monthly_savings_inr": 720.0
+    }
+  },
+  {
+    "id": "audit-2d126877b94e",
+    "timestamp": "2026-10-18T08:25:41.112467+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-0e946f3d8562",
+    "timestamp": "2026-10-18T08:40:38.394811+00:00",
+    "event_type": "REGISTER",
+    "status": "SUCCESS",
+    "user_id": "ed21b6d6-1d0e-44f4-a5ec-ee70f6f64cc9",
+    "user_email": "alex.dev@gmail.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "name": "Alex Developer",
+      "assigned_role": "user"
+    }
+  },
+  {
+    "id": "audit-a5b174a3af94",
+    "timestamp": "2026-10-18T08:40:38.487335+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "ed21b6d6-1d0e-44f4-a5ec-ee70f6f64cc9",
+    "user_email": "alex.dev@gmail.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-186e2a0c8b88",
+    "timestamp": "2026-10-18T08:40:38.494328+00:00",
+    "event_type": "LOGOUT",
+    "status": "SUCCESS",
+    "user_id": "ed21b6d6-1d0e-44f4-a5ec-ee70f6f64cc9",
+    "user_email": "alex.dev@gmail.com",
+    "ip_address": "127.0.0.1",
+    "details": {}
+  },
+  {
+    "id": "audit-d1a4861d05cd",
+    "timestamp": "2026-10-18T08:40:38.681829+00:00",
+    "event_type": "LOGIN_FAILURE",
+    "status": "FAILED",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "reason": "INVALID_CREDENTIALS",
+      "attempted_email": "student@college.edu"
+    }
+  },
+  {
+    "id": "audit-769f76523d63",
+    "timestamp": "2026-10-18T08:40:38.846929+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-bd0a5b6177ed",
+    "timestamp": "2026-10-18T08:40:38.849925+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/overview",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-8e4fd4954b69",
+    "timestamp": "2026-10-18T08:40:38.925445+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-fcfcc59836b0",
+    "timestamp": "2026-10-18T08:40:39.100823+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-8833611e3bf0",
+    "timestamp": "2026-10-18T08:40:39.109834+00:00",
+    "event_type": "APPLIANCE_CREATED",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "appliance_id": "25c8ddb3-e697-4b0d-b205-3190cacc667d",
+      "name": "Study Room AC",
+      "wattage_w": 1000.0
+    }
+  },
+  {
+    "id": "audit-b0b6672a45d3",
+    "timestamp": "2026-10-18T08:40:39.306550+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-2434060a5afc",
+    "timestamp": "2026-10-18T08:40:39.357550+00:00",
+    "event_type": "DATASET_UPLOAD",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "0faad610-8288-4f38-9ce6-fe2cb888f6c5",
+      "filename": "usage.csv",
+      "row_count": 1,
+      "total_energy_kwh": 2.5
+    }
+  },
+  {
+    "id": "audit-06b793b48dab",
+    "timestamp": "2026-10-18T08:40:39.363549+00:00",
+    "event_type": "DATASET_RENAME",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "0faad610-8288-4f38-9ce6-fe2cb888f6c5",
+      "old_filename": "usage.csv",
+      "new_filename": "renamed-usage.csv"
+    }
+  },
+  {
+    "id": "audit-6a4411a0c43c",
+    "timestamp": "2026-10-18T08:40:39.374937+00:00",
+    "event_type": "DATASET_DELETE",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "0faad610-8288-4f38-9ce6-fe2cb888f6c5",
+      "filename": "renamed-usage.csv"
+    }
+  },
+  {
+    "id": "audit-4475af3dd9a3",
+    "timestamp": "2026-10-18T08:40:39.564244+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-911576e51dec",
+    "timestamp": "2026-10-18T08:40:39.749948+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-c3d7ed017abd",
+    "timestamp": "2026-10-18T08:40:39.754953+00:00",
+    "event_type": "REPORT_EXPORT",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "default",
+      "exported_rows": 30,
+      "tariff": 8.0
+    }
+  },
+  {
+    "id": "audit-e439ebdda139",
+    "timestamp": "2026-10-18T08:40:40.565119+00:00",
+    "event_type": "REGISTER",
+    "status": "SUCCESS",
+    "user_id": "cc24ce0b-13e6-4ca4-aaba-1d2f90e68c20",
+    "user_email": "attacker@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "name": "Attacker",
+      "assigned_role": "user"
+    }
+  },
+  {
+    "id": "audit-916af669724d",
+    "timestamp": "2026-10-18T08:40:41.038974+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-3e07fe9e9414",
+    "timestamp": "2026-10-18T08:40:41.043975+00:00",
+    "event_type": "PROFILE_UPDATED",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "new_name": "Household Renamed"
+    }
+  },
+  {
+    "id": "audit-d80b54fb7f0c",
+    "timestamp": "2026-10-18T08:40:41.468457+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh2-id",
+    "user_email": "hh2@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-eb5a44443a14",
+    "timestamp": "2026-10-18T08:40:41.474455+00:00",
+    "event_type": "APPLIANCE_CREATED",
+    "status": "SUCCESS",
+    "user_id": "hh2-id",
+    "user_email": "hh2@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "appliance_id": "65b2a36b-bef0-4e2f-82a3-2e37224490b2",
+      "name": "User 2 AC",
+      "wattage_w": 1500.0
+    }
+  },
+  {
+    "id": "audit-0ca2e6037889",
+    "timestamp": "2026-10-18T08:40:41.557301+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-3525c08fdec3",
+    "timestamp": "2026-10-18T08:40:41.646491+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh2-id",
+    "user_email": "hh2@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-26225335d8f2",
+    "timestamp": "2026-10-18T08:40:42.079659+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-82678cf862d3",
+    "timestamp": "2026-10-18T08:40:42.082659+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/overview",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-b3f7db4c3376",
+    "timestamp": "2026-10-18T08:40:42.087106+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/users",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-6a2ff986c16c",
+    "timestamp": "2026-10-18T08:40:42.090114+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/audit-logs",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-e5104a08c401",
+    "timestamp": "2026-10-18T08:40:42.178113+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "analyst"
+    }
+  },
+  {
+    "id": "audit-c19a4c04bda0",
+    "timestamp": "2026-10-18T08:40:42.182115+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/overview",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "analyst"
+    }
+  },
+  {
+    "id": "audit-777a62baf1c3",
+    "timestamp": "2026-10-18T08:40:42.186263+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/users",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "analyst"
+    }
+  },
+  {
+    "id": "audit-00b11ece855f",
+    "timestamp": "2026-10-18T08:40:42.734182+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-fefe3919f4cb",
+    "timestamp": "2026-10-18T08:40:42.741175+00:00",
+    "event_type": "ROLE_CHANGE",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "target_user_id": "hh1-id",
+      "target_user_email": "hh1@test.com",
+      "old_role": "user",
+      "new_role": "analyst"
+    }
+  },
+  {
+    "id": "audit-4d1ca0a0d035",
+    "timestamp": "2026-10-18T08:40:42.751693+00:00",
+    "event_type": "ROLE_CHANGE",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "target_user_id": "hh1-id",
+      "target_user_email": "hh1@test.com",
+      "old_role": "analyst",
+      "new_role": "user"
+    }
+  },
+  {
+    "id": "audit-ffb1c89afdef",
+    "timestamp": "2026-10-18T08:40:42.761288+00:00",
+    "event_type": "ACCOUNT_STATUS_CHANGE",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "target_user_id": "hh1-id",
+      "target_user_email": "hh1@test.com",
+      "is_active": false
+    }
+  },
+  {
+    "id": "audit-6bf018da0ea4",
+    "timestamp": "2026-10-18T08:40:42.772392+00:00",
+    "event_type": "LOGOUT",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {}
+  },
+  {
+    "id": "audit-8ae432cc571c",
+    "timestamp": "2026-10-18T08:40:42.892218+00:00",
+    "event_type": "LOGIN_FAILURE",
+    "status": "FAILED",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "reason": "ACCOUNT_DISABLED"
+    }
+  },
+  {
+    "id": "audit-8da3bff6db48",
+    "timestamp": "2026-10-18T08:40:43.007332+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-dcc6790cb5f8",
+    "timestamp": "2026-10-18T08:40:43.017770+00:00",
+    "event_type": "ACCOUNT_STATUS_CHANGE",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "target_user_id": "hh1-id",
+      "target_user_email": "hh1@test.com",
+      "is_active": true
+    }
+  },
+  {
+    "id": "audit-b1cac49290c9",
+    "timestamp": "2026-10-18T08:40:43.516512+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-9dd242f1f0de",
+    "timestamp": "2026-10-18T08:40:43.523944+00:00",
+    "event_type": "DATASET_UPLOAD",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "3382831a-ca06-4d6f-ac4a-984f6339aa15",
+      "filename": "hh1_private.csv",
+      "row_count": 1,
+      "total_energy_kwh": 3.5
+    }
+  },
+  {
+    "id": "audit-1ac0e89a4f2a",
+    "timestamp": "2026-10-18T08:40:43.608166+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh2-id",
+    "user_email": "hh2@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-18086519afbb",
+    "timestamp": "2026-10-18T08:40:43.703711+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "analyst"
+    }
+  },
+  {
+    "id": "audit-8f5e2711516b",
+    "timestamp": "2026-10-18T08:40:43.800635+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-f3a89b0698bd",
+    "timestamp": "2026-10-18T08:40:43.808862+00:00",
+    "event_type": "DATASET_SHARED",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "3382831a-ca06-4d6f-ac4a-984f6339aa15",
+      "shared_with": [
+        "analyst-id"
+      ]
+    }
+  },
+  {
+    "id": "audit-77c5615a1cc2",
+    "timestamp": "2026-10-18T08:40:43.898903+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "analyst"
+    }
+  },
+  {
+    "id": "audit-04b277109b0d",
+    "timestamp": "2026-10-18T08:40:43.997271+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-cb201653afeb",
+    "timestamp": "2026-10-18T08:40:44.006534+00:00",
+    "event_type": "DATASET_DELETE",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "3382831a-ca06-4d6f-ac4a-984f6339aa15",
+      "filename": "hh1_private.csv"
+    }
+  },
+  {
+    "id": "audit-ac87fb88bbd8",
+    "timestamp": "2026-10-18T08:40:44.532625+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-c6f2ae3f6f63",
+    "timestamp": "2026-10-18T08:40:45.022925+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-d171c06d376f",
+    "timestamp": "2026-10-18T08:40:45.028919+00:00",
+    "event_type": "SAVINGS_SCENARIO_SAVED",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "scenario_id": "scen-47f578c8",
+      "name": "Summer AC Cutback",
+      "appliance_name": "Living Room AC",
+      "monthly_savings_inr": 720.0
+    }
+  },
+  {
+    "id": "audit-df285284cf08",
+    "timestamp": "2026-10-18T08:40:45.492715+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-39dc48a432ef",
+    "timestamp": "2026-10-18T08:53:15.935283+00:00",
+    "event_type": "REGISTER",
+    "status": "SUCCESS",
+    "user_id": "3032a6e1-2700-4ba8-9d28-4731190ae434",
+    "user_email": "alex.dev@gmail.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "name": "Alex Developer",
+      "assigned_role": "user"
+    }
+  },
+  {
+    "id": "audit-43e8e1a1c39b",
+    "timestamp": "2026-10-18T08:53:16.012864+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "3032a6e1-2700-4ba8-9d28-4731190ae434",
+    "user_email": "alex.dev@gmail.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-a027558114e5",
+    "timestamp": "2026-10-18T08:53:16.017866+00:00",
+    "event_type": "LOGOUT",
+    "status": "SUCCESS",
+    "user_id": "3032a6e1-2700-4ba8-9d28-4731190ae434",
+    "user_email": "alex.dev@gmail.com",
+    "ip_address": "127.0.0.1",
+    "details": {}
+  },
+  {
+    "id": "audit-322c34efd5a3",
+    "timestamp": "2026-10-18T08:53:16.183845+00:00",
+    "event_type": "LOGIN_FAILURE",
+    "status": "FAILED",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "reason": "INVALID_CREDENTIALS",
+      "attempted_email": "student@college.edu"
+    }
+  },
+  {
+    "id": "audit-6a92c61cb062",
+    "timestamp": "2026-10-18T08:53:16.353261+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-09d86df02377",
+    "timestamp": "2026-10-18T08:53:16.356791+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/overview",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-8163e6a590bd",
+    "timestamp": "2026-10-18T08:53:16.437858+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-d3e15f4d96b2",
+    "timestamp": "2026-10-18T08:53:16.609634+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-2717214a2b63",
+    "timestamp": "2026-10-18T08:53:16.616629+00:00",
+    "event_type": "APPLIANCE_CREATED",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "appliance_id": "6f70247c-2019-48af-b3d2-92c838c7a6bf",
+      "name": "Study Room AC",
+      "wattage_w": 1000.0
+    }
+  },
+  {
+    "id": "audit-c71c70b53fd3",
+    "timestamp": "2026-10-18T08:53:16.794944+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-4f46ee1f7347",
+    "timestamp": "2026-10-18T08:53:16.831156+00:00",
+    "event_type": "DATASET_UPLOAD",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "0d7c7fb8-52e0-4802-91f1-0592c862f6cf",
+      "filename": "usage.csv",
+      "row_count": 1,
+      "total_energy_kwh": 2.5
+    }
+  },
+  {
+    "id": "audit-04095eb9da22",
+    "timestamp": "2026-10-18T08:53:16.839274+00:00",
+    "event_type": "DATASET_RENAME",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "0d7c7fb8-52e0-4802-91f1-0592c862f6cf",
+      "old_filename": "usage.csv",
+      "new_filename": "renamed-usage.csv"
+    }
+  },
+  {
+    "id": "audit-ae3517a7509a",
+    "timestamp": "2026-10-18T08:53:16.847428+00:00",
+    "event_type": "DATASET_DELETE",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "0d7c7fb8-52e0-4802-91f1-0592c862f6cf",
+      "filename": "renamed-usage.csv"
+    }
+  },
+  {
+    "id": "audit-7c162a167e08",
+    "timestamp": "2026-10-18T08:53:17.013225+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-eec4347d8774",
+    "timestamp": "2026-10-18T08:53:17.182274+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-def9abb83f77",
+    "timestamp": "2026-10-18T08:53:17.188275+00:00",
+    "event_type": "REPORT_EXPORT",
+    "status": "SUCCESS",
+    "user_id": "student-test-id",
+    "user_email": "student@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "default",
+      "exported_rows": 30,
+      "tariff": 8.0
+    }
+  },
+  {
+    "id": "audit-42636013ca9a",
+    "timestamp": "2026-10-18T08:53:17.909179+00:00",
+    "event_type": "REGISTER",
+    "status": "SUCCESS",
+    "user_id": "9cdb35b1-4c35-4376-815e-f738069c4db6",
+    "user_email": "attacker@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "name": "Attacker",
+      "assigned_role": "user"
+    }
+  },
+  {
+    "id": "audit-2b3a1f69bd4a",
+    "timestamp": "2026-10-18T08:53:18.341427+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-e6be83c688a2",
+    "timestamp": "2026-10-18T08:53:18.346432+00:00",
+    "event_type": "PROFILE_UPDATED",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "new_name": "Household Renamed"
+    }
+  },
+  {
+    "id": "audit-361fe20d15b1",
+    "timestamp": "2026-10-18T08:53:18.747880+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh2-id",
+    "user_email": "hh2@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-8d5661d99126",
+    "timestamp": "2026-10-18T08:53:18.753873+00:00",
+    "event_type": "APPLIANCE_CREATED",
+    "status": "SUCCESS",
+    "user_id": "hh2-id",
+    "user_email": "hh2@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "appliance_id": "cfea5c37-1535-46c8-bfb0-38c8897bf259",
+      "name": "User 2 AC",
+      "wattage_w": 1500.0
+    }
+  },
+  {
+    "id": "audit-ba1bac532b95",
+    "timestamp": "2026-10-18T08:53:18.834033+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-899e3d4f22a8",
+    "timestamp": "2026-10-18T08:53:18.913970+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh2-id",
+    "user_email": "hh2@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-e0f60bc543b8",
+    "timestamp": "2026-10-18T08:53:19.306859+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-48a0ebd22152",
+    "timestamp": "2026-10-18T08:53:19.310842+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/overview",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-65ad220ed3ba",
+    "timestamp": "2026-10-18T08:53:19.313841+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/users",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-425953eceab5",
+    "timestamp": "2026-10-18T08:53:19.317844+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/audit-logs",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "user"
+    }
+  },
+  {
+    "id": "audit-2004560a73db",
+    "timestamp": "2026-10-18T08:53:19.398896+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "analyst"
+    }
+  },
+  {
+    "id": "audit-b3a78fd60c69",
+    "timestamp": "2026-10-18T08:53:19.404899+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/overview",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "analyst"
+    }
+  },
+  {
+    "id": "audit-ec7bdcd3ab78",
+    "timestamp": "2026-10-18T08:53:19.407900+00:00",
+    "event_type": "PERMISSION_DENIED",
+    "status": "FAILED",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "path": "/api/v1/admin/users",
+      "method": "GET",
+      "required_roles": [
+        "admin"
+      ],
+      "user_role": "analyst"
+    }
+  },
+  {
+    "id": "audit-0a7bef8c15f3",
+    "timestamp": "2026-10-18T08:53:19.807041+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-eef2cffb3575",
+    "timestamp": "2026-10-18T08:53:19.813035+00:00",
+    "event_type": "ROLE_CHANGE",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "target_user_id": "hh1-id",
+      "target_user_email": "hh1@test.com",
+      "old_role": "user",
+      "new_role": "analyst"
+    }
+  },
+  {
+    "id": "audit-f426c3097417",
+    "timestamp": "2026-10-18T08:53:19.818767+00:00",
+    "event_type": "ROLE_CHANGE",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "target_user_id": "hh1-id",
+      "target_user_email": "hh1@test.com",
+      "old_role": "analyst",
+      "new_role": "user"
+    }
+  },
+  {
+    "id": "audit-6144b6598d68",
+    "timestamp": "2026-10-18T08:53:19.823764+00:00",
+    "event_type": "ACCOUNT_STATUS_CHANGE",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "target_user_id": "hh1-id",
+      "target_user_email": "hh1@test.com",
+      "is_active": false
+    }
+  },
+  {
+    "id": "audit-bf8f61b2621d",
+    "timestamp": "2026-10-18T08:53:19.827764+00:00",
+    "event_type": "LOGOUT",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {}
+  },
+  {
+    "id": "audit-150a8fc214a0",
+    "timestamp": "2026-10-18T08:53:19.909592+00:00",
+    "event_type": "LOGIN_FAILURE",
+    "status": "FAILED",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "reason": "ACCOUNT_DISABLED"
+    }
+  },
+  {
+    "id": "audit-ec9b90a8d0bb",
+    "timestamp": "2026-10-18T08:53:19.988559+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-c4b7e3b1a5e9",
+    "timestamp": "2026-10-18T08:53:19.993513+00:00",
+    "event_type": "ACCOUNT_STATUS_CHANGE",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "target_user_id": "hh1-id",
+      "target_user_email": "hh1@test.com",
+      "is_active": true
+    }
+  },
+  {
+    "id": "audit-d497008f4aff",
+    "timestamp": "2026-10-18T08:53:20.394562+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-c04a3e79c4b6",
+    "timestamp": "2026-10-18T08:53:20.403298+00:00",
+    "event_type": "DATASET_UPLOAD",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "8289b3bc-99c2-499f-8f29-3e0c32392d52",
+      "filename": "hh1_private.csv",
+      "row_count": 1,
+      "total_energy_kwh": 3.5
+    }
+  },
+  {
+    "id": "audit-b0ea844f13ab",
+    "timestamp": "2026-10-18T08:53:20.480586+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh2-id",
+    "user_email": "hh2@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-19e3518513c7",
+    "timestamp": "2026-10-18T08:53:20.563862+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "analyst"
+    }
+  },
+  {
+    "id": "audit-6a85d324af23",
+    "timestamp": "2026-10-18T08:53:20.642320+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-bc675414bf9d",
+    "timestamp": "2026-10-18T08:53:20.648325+00:00",
+    "event_type": "DATASET_SHARED",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "8289b3bc-99c2-499f-8f29-3e0c32392d52",
+      "shared_with": [
+        "analyst-id"
+      ]
+    }
+  },
+  {
+    "id": "audit-3d0957e66a00",
+    "timestamp": "2026-10-18T08:53:20.727990+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "analyst-id",
+    "user_email": "analyst@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "analyst"
+    }
+  },
+  {
+    "id": "audit-642dfd6f3d08",
+    "timestamp": "2026-10-18T08:53:20.810063+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-c8d247bdbdba",
+    "timestamp": "2026-10-18T08:53:20.819060+00:00",
+    "event_type": "DATASET_DELETE",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "dataset_id": "8289b3bc-99c2-499f-8f29-3e0c32392d52",
+      "filename": "hh1_private.csv"
+    }
+  },
+  {
+    "id": "audit-4ff6f9a7ce0c",
+    "timestamp": "2026-10-18T08:53:21.221223+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-da2164f1a9d2",
+    "timestamp": "2026-10-18T08:53:21.636388+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "user"
+    }
+  },
+  {
+    "id": "audit-e31f2f7434c6",
+    "timestamp": "2026-10-18T08:53:21.643382+00:00",
+    "event_type": "SAVINGS_SCENARIO_SAVED",
+    "status": "SUCCESS",
+    "user_id": "hh1-id",
+    "user_email": "hh1@test.com",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "scenario_id": "scen-e7065f73",
+      "name": "Summer AC Cutback",
+      "appliance_name": "Living Room AC",
+      "monthly_savings_inr": 720.0
+    }
+  },
+  {
+    "id": "audit-5e5134843bb1",
+    "timestamp": "2026-10-18T08:53:22.047856+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-e7a3cf3a0a44",
+    "timestamp": "2026-10-18T09:05:13.532063+00:00",
+    "event_type": "JOB_TRIGGERED",
+    "status": "SUCCESS",
+    "user_id": "5c5a4df4-834f-4ce4-ac43-5d49943974d2",
+    "user_email": "alex@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "job_id": "job-59f9dae0",
+      "dataset_id": "demo-dataset-default",
+      "operation": "Energy Aggregation",
+      "execution_mode": "Local MapReduce Stream (Python Streaming Fallback)",
+      "duration_ms": 3.53
+    }
+  },
+  {
+    "id": "audit-72b2acb48488",
+    "timestamp": "2026-10-18T09:05:39.733919+00:00",
+    "event_type": "SAVINGS_SCENARIO_SAVED",
+    "status": "SUCCESS",
+    "user_id": "5c5a4df4-834f-4ce4-ac43-5d49943974d2",
+    "user_email": "alex@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "scenario_id": "scen-af8a30fc",
+      "name": "Television Saver (24h \u2192 24h)",
+      "appliance_name": "Television",
+      "monthly_savings_inr": 0.0
+    }
+  },
+  {
+    "id": "audit-bcfa96dc253a",
+    "timestamp": "2026-10-18T09:06:01.904071+00:00",
+    "event_type": "LOGOUT",
+    "status": "SUCCESS",
+    "user_id": "5c5a4df4-834f-4ce4-ac43-5d49943974d2",
+    "user_email": "alex@college.edu",
+    "ip_address": "127.0.0.1",
+    "details": {}
+  },
+  {
+    "id": "audit-f10f48e25165",
+    "timestamp": "2026-10-18T09:07:12.462156+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "admin"
+    }
+  },
+  {
+    "id": "audit-1ce1df06a46a",
+    "timestamp": "2026-10-18T09:07:53.895511+00:00",
+    "event_type": "LOGOUT",
+    "status": "SUCCESS",
+    "user_id": "admin-seed-id",
+    "user_email": "admin@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {}
+  },
+  {
+    "id": "audit-1e812e8a645e",
+    "timestamp": "2026-10-18T09:08:18.357784+00:00",
+    "event_type": "LOGIN_SUCCESS",
+    "status": "SUCCESS",
+    "user_id": "analyst-seed-id",
+    "user_email": "analyst@powerwise.local",
+    "ip_address": "127.0.0.1",
+    "details": {
+      "role": "analyst"
+    }
+  }
+]

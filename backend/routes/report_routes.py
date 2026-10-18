@@ -2,7 +2,8 @@ import csv
 import io
 from flask import Blueprint, request, Response, jsonify, g
 from backend.auth import login_required
-from backend.routes.analytics_routes import load_dataset_records
+from backend.routes.analytics_routes import load_dataset_records_with_auth
+from backend.audit import log_audit_event
 
 report_bp = Blueprint("reports", __name__, url_prefix="/api/v1/reports")
 
@@ -23,7 +24,11 @@ def sanitize_csv_cell(value) -> str:
 def export_csv():
     dataset_id = request.args.get("dataset_id")
     tariff = float(request.args.get("tariff", 8.0))
-    records = load_dataset_records(dataset_id)
+
+    # Enforce authorization on dataset before reading records
+    records, error = load_dataset_records_with_auth(dataset_id, g.current_user)
+    if error:
+        return error
 
     if not records:
         return jsonify({"error": {"code": "EMPTY_DATASET", "message": "No records found to export."}}), 400
@@ -64,6 +69,18 @@ def export_csv():
 
     csv_data = output.getvalue()
     filename = f"powerwise_analytics_export_{dataset_id or 'default'}.csv"
+
+    log_audit_event(
+        event_type="REPORT_EXPORT",
+        status="SUCCESS",
+        details={
+            "dataset_id": dataset_id or "default",
+            "exported_rows": len(records),
+            "tariff": tariff,
+        },
+        user_id=g.current_user["id"],
+        user_email=g.current_user.get("email"),
+    )
 
     return Response(
         csv_data,

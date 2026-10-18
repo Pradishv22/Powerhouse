@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   LineChart,
@@ -19,7 +19,7 @@ import { consumptionRecords, clusteredHouseholds, dashboardSummary } from "@/dat
 import { sumBy, monthKey, totalKwh, toCsv } from "@/utils/aggregate";
 import { energyCost, formatRupees, formatKwh } from "@/utils/energyCalculations";
 import { PageHeader, ChartCard, MetricCard, tooltipStyle, CHART_COLORS } from "@/components/ui-kit";
-import { getExportCsvUrl } from "@/services/api";
+import { getExportCsvUrl, getDatasets, type DatasetItem } from "@/services/api";
 
 export const Route = createFileRoute("/reports")({
   head: () => ({
@@ -67,13 +67,25 @@ function Reports() {
   }, []);
   const total = totalKwh(consumptionRecords);
 
+  const [datasets, setDatasets] = useState<DatasetItem[]>([]);
+  const [selectedDatasetId, setSelectedDatasetId] = useState<string>("demo-dataset-default");
+
+  useEffect(() => {
+    getDatasets().then((list) => {
+      setDatasets(list);
+      if (list.length > 0) {
+        setSelectedDatasetId((prev) => (list.some((d) => d.id === prev) ? prev : list[0].id));
+      }
+    });
+  }, []);
+
   function downloadCsv() {
-    // Attempt download via backend endpoint
-    const exportUrl = getExportCsvUrl(8);
+    // Attempt download via backend endpoint passing selected authorized dataset
+    const exportUrl = getExportCsvUrl(8, selectedDatasetId);
     const link = document.createElement("a");
     link.href = exportUrl;
     link.target = "_blank";
-    link.download = "powerwise_analytics_export.csv";
+    link.download = `powerwise_analytics_export_${selectedDatasetId}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -86,6 +98,19 @@ function Reports() {
         subtitle="Export historical electricity datasets with sanitized CSV schema ready for Tableau analysis."
       >
         <div className="flex flex-wrap items-center gap-3">
+          {datasets.length > 0 && (
+            <select
+              value={selectedDatasetId}
+              onChange={(e) => setSelectedDatasetId(e.target.value)}
+              className="rounded-xl border border-input bg-card px-3 py-1.5 text-xs font-semibold text-foreground"
+            >
+              {datasets.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.filename} {d.is_demo ? "(Shared Demo)" : `(${d.row_count} rows)`}
+                </option>
+              ))}
+            </select>
+          )}
           <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-semibold">
             <FileSpreadsheet className="h-3.5 w-3.5 text-success" /> Tableau-Ready Schema
           </span>

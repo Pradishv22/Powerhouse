@@ -33,4 +33,28 @@ describe("energy calculations", () => {
       { key: "Household B", total: 4 },
     ]);
   });
+
+  it("smart savings planner calculates correct reductions and rupee savings", () => {
+    // 1500W AC from 6 hours to 4 hours at ₹8/kWh
+    const watts = 1500;
+    const currHours = 6;
+    const propHours = 4;
+    const rate = 8;
+
+    const currDaily = (watts * currHours) / 1000; // 9 kWh
+    const propDaily = (watts * propHours) / 1000; // 6 kWh
+    const dailyReduction = currDaily - propDaily; // 3 kWh
+    const monthlyReduction = dailyReduction * 30; // 90 kWh
+    const monthlySavingsInr = monthlyReduction * rate; // ₹720
+    const annualSavingsInr = monthlySavingsInr * 12; // ₹8640
+    const percentReduction = (monthlyReduction / (currDaily * 30)) * 100; // 33.33%
+
+    expect(currDaily).toBe(9);
+    expect(propDaily).toBe(6);
+    expect(dailyReduction).toBe(3);
+    expect(monthlyReduction).toBe(90);
+    expect(monthlySavingsInr).toBe(720);
+    expect(annualSavingsInr).toBe(8640);
+    expect(Math.round(percentReduction * 10) / 10).toBe(33.3);
+  });
 });

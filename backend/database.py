@@ -38,15 +38,26 @@ class LocalCollection:
             with open(self.filepath, "w", encoding="utf-8") as f:
                 json.dump(items, f, indent=2, default=str)
 
+    @staticmethod
+    def _matches(item: dict, query: dict) -> bool:
+        if not query:
+            return True
+        for k, v in query.items():
+            item_val = item.get(k)
+            if isinstance(v, dict) and "$in" in v:
+                if item_val not in v["$in"]:
+                    return False
+            elif isinstance(item_val, list):
+                if v not in item_val:
+                    return False
+            elif item_val != v:
+                return False
+        return True
+
     def find_one(self, query):
         items = self._read_all()
         for item in items:
-            match = True
-            for k, v in query.items():
-                if item.get(k) != v:
-                    match = False
-                    break
-            if match:
+            if self._matches(item, query):
                 return dict(item)
         return None
 
@@ -54,16 +65,7 @@ class LocalCollection:
         items = self._read_all()
         if not query:
             return [dict(i) for i in items]
-        result = []
-        for item in items:
-            match = True
-            for k, v in query.items():
-                if item.get(k) != v:
-                    match = False
-                    break
-            if match:
-                result.append(dict(item))
-        return result
+        return [dict(item) for item in items if self._matches(item, query)]
 
     def insert_one(self, doc):
         items = self._read_all()
@@ -170,6 +172,10 @@ class DatabaseManager:
     @property
     def audit_logs(self):
         return self.get_collection("audit_logs")
+
+    @property
+    def savings_scenarios(self):
+        return self.get_collection("savings_scenarios")
 
 
 # Global singleton instance

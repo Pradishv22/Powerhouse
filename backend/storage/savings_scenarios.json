@@ -1,0 +1,46 @@
+[
+  {
+    "id": "scen-af8a30fc",
+    "owner_id": "5c5a4df4-834f-4ce4-ac43-5d49943974d2",
+    "name": "Television Saver (24h \u2192 24h)",
+    "appliance_name": "Television",
+    "inputs": {
+      "wattage_w": 120.0,
+      "current_daily_hours": 24.0,
+      "proposed_daily_hours": 24.0,
+      "tariff_inr": 8.0,
+      "fixed_charges_inr": 0.0,
+      "quantity": 1
+    },
+    "projection": {
+      "is_hypothetical_projection": true,
+      "disclaimer": "Simulated projection based on hypothetical usage reduction. Actual savings will vary with seasonal temperatures, meter billing cycles, and DISCOM slab rates.",
+      "assumptions": {
+        "billing_days": 30,
+        "tariff_inr_per_kwh": 8.0,
+        "fixed_charges_inr": 0.0,
+        "formula": "Energy (kWh) = Wattage (W) \u00d7 Daily Hours (h) \u00d7 Quantity \u00f7 1000"
+      },
+      "current_scenario": {
+        "daily_hours": 24.0,
+        "daily_kwh": 2.88,
+        "monthly_kwh": 86.4,
+        "monthly_cost_inr": 691.2
+      },
+      "proposed_scenario": {
+        "daily_hours": 24.0,
+        "daily_kwh": 2.88,
+        "monthly_kwh": 86.4,
+        "monthly_cost_inr": 691.2
+      },
+      "reductions": {
+        "daily_kwh": 0.0,
+        "monthly_kwh": 0.0,
+        "monthly_savings_inr": 0.0,
+        "annual_savings_inr": 0.0,
+        "percent_reduction": 0.0
+      }
+    },
+    "created_at": "2026-10-18T09:05:39.730918+00:00"
+  }
+]

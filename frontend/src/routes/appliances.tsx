@@ -106,7 +106,11 @@ function Appliances() {
     const hours = window.prompt("Hours per day", String(appliance.hours));
     if (!name.trim() || watts === null || hours === null) return;
     try {
-      await updateAppliance(appliance.id, { name: name.trim(), watts: Number(watts), hours: Number(hours) });
+      await updateAppliance(appliance.id, {
+        name: name.trim(),
+        watts: Number(watts),
+        hours: Number(hours),
+      });
       await fetchAppliances();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not update the appliance.");

@@ -10,6 +10,7 @@ from backend.routes.analytics_routes import analytics_bp
 from backend.routes.report_routes import report_bp
 from backend.routes.admin_routes import admin_bp
 from backend.routes.health_routes import health_bp
+from backend.routes.savings_routes import savings_bp
 
 
 def create_app(test_config=None):
@@ -51,6 +52,7 @@ def create_app(test_config=None):
     app.register_blueprint(report_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(health_bp)
+    app.register_blueprint(savings_bp)
 
     # Initialize seed data
     with app.app_context():
